@@ -298,16 +298,26 @@ class PermohonanSuratController extends Controller
         ]);
 
         if ($request->status_persetujuan === 'disetujui') {
-            $bulan     = date('m');
-            $tahun     = date('Y');
-            $urutan    = PermohonanSurat::whereMonth('tanggal_terbit', $bulan)->whereYear('tanggal_terbit', $tahun)->count() + 1;
+            $tahun = date('Y');
 
+            // Hitung nomor urut surat tahun ini (reset setiap tahun)
+            $urutan = PermohonanSurat::whereYear('tanggal_terbit', $tahun)
+                                     ->whereNotNull('nomor_surat')
+                                     ->count() + 1;
+
+            // Bulan dalam angka Romawi (standar surat resmi Indonesia)
+            $bulanRomawi = ['', 'I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
+            $bulan       = (int) date('m');
+
+            // Format standar Indonesia:
+            // {kode-klasifikasi}/{nomor-urut}/{kode-instansi}/{bulan-romawi}/{tahun}
+            // Kode 470 = kependudukan / layanan desa
+            $permohonan->nomor_surat    = sprintf('470.1/%03d/DS.MDN/%s/%s', $urutan, $bulanRomawi[$bulan], $tahun);
             $permohonan->status         = 'disetujui';
-            $permohonan->nomor_surat    = sprintf('470/%03d/DES-MDN/%s/%s', $urutan, $bulan, $tahun);
             $permohonan->qr_code        = Str::uuid();
             $permohonan->tanggal_terbit = now();
         } else {
-            $permohonan->status          = 'ditolak';
+            $permohonan->status           = 'ditolak';
             $permohonan->catatan_terakhir = $request->catatan;
         }
 

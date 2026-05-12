@@ -5,82 +5,108 @@
 @section('page-subtitle', 'Buat layanan surat baru lengkap dengan persyaratannya')
 
 @section('content')
-<div class="max-w-3xl space-y-6">
+<div class="grid grid-cols-1 xl:grid-cols-[1fr_360px] gap-6 items-start">
 
-    <a href="{{ route('staff.jenis_surat.index') }}" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-700 font-medium transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Kembali ke Daftar
-    </a>
+    {{-- ═══════════ KOLOM KIRI: FORM ═══════════ --}}
+    <div class="space-y-6">
+        <a href="{{ route('staff.jenis_surat.index') }}" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-teal-700 font-medium transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Kembali ke Daftar
+        </a>
 
-    <form action="{{ route('staff.jenis_surat.store') }}" method="POST" class="space-y-6">
-        @csrf
+        <form id="mainForm" action="{{ route('staff.jenis_surat.store') }}" method="POST" class="space-y-6">
+            @csrf
 
-        <!-- Info Dasar -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
-            <h2 class="font-bold text-gray-800 text-base border-b border-slate-100 pb-3">Informasi Layanan Surat</h2>
-
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Layanan Surat <span class="text-red-500">*</span></label>
-                <input type="text" name="nama_surat" value="{{ old('nama_surat') }}" required
-                       class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition text-sm"
-                       placeholder="Contoh: Surat Keterangan Domisili">
+            {{-- Info Dasar --}}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-5">
+                <h2 class="font-bold text-gray-800 text-base border-b border-slate-100 pb-3">Informasi Layanan Surat</h2>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nama Layanan Surat <span class="text-red-500">*</span></label>
+                    <input type="text" name="nama_surat" value="{{ old('nama_surat') }}" required
+                           class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition text-sm"
+                           placeholder="Contoh: Surat Keterangan Domisili">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Deskripsi Layanan</label>
+                    <textarea name="deskripsi" rows="2"
+                              class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition text-sm"
+                              placeholder="Jelaskan kegunaan surat ini untuk warga...">{{ old('deskripsi') }}</textarea>
+                </div>
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" id="is_aktif" name="is_aktif" value="1" checked class="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500">
+                    <label for="is_aktif" class="text-sm font-medium text-gray-700">Aktifkan layanan ini segera</label>
+                </div>
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Deskripsi Layanan</label>
-                <textarea name="deskripsi" rows="2"
-                          class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition text-sm"
-                          placeholder="Jelaskan kegunaan surat ini untuk warga...">{{ old('deskripsi') }}</textarea>
+            {{-- WYSIWYG Editor --}}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-3">
+                <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+                    <div>
+                        <h2 class="font-bold text-gray-800 text-base">Template Konten Surat</h2>
+                        <p class="text-xs text-gray-500 mt-0.5">Tulis isi surat menggunakan editor di bawah. Klik placeholder untuk menyisipkan data otomatis.</p>
+                    </div>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-lg text-xs font-bold">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        Rich Text Editor
+                    </span>
+                </div>
+
+                {{-- Placeholder chips --}}
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="text-xs text-gray-400 self-center mr-1 font-medium">Sisipkan:</span>
+                    @foreach([
+                        '[[nama]]'        => 'Nama Warga',
+                        '[[nik]]'         => 'NIK',
+                        '[[alamat]]'      => 'Alamat',
+                        '[[nomor_surat]]' => 'Nomor Surat',
+                        '[[tanggal]]'     => 'Tanggal',
+                    ] as $ph => $label)
+                    <button type="button" onclick="insertPlaceholder('{{ $ph }}')"
+                            class="px-2.5 py-1 bg-teal-50 border border-teal-200 text-teal-700 rounded-lg text-xs font-semibold hover:bg-teal-100 transition">
+                        {{ $label }}
+                    </button>
+                    @endforeach
+                    <span class="text-xs text-gray-400 self-center ml-2">
+                        + <code class="bg-slate-100 px-1 rounded font-mono">[[syarat.Nama Syarat]]</code> untuk isian warga
+                    </span>
+                </div>
+
+                {{-- Quill Editor container --}}
+                <div id="quillEditor" style="min-height: 280px; font-size: 13px;"></div>
+
+                {{-- Hidden textarea untuk nilai yang akan di-submit --}}
+                <textarea id="templateKonten" name="template_konten" class="hidden">{{ old('template_konten') }}</textarea>
             </div>
 
-            <div>
-                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Template Konten Surat (HTML)</label>
-                <p class="text-xs text-gray-500 mb-2">
-                    Tulis isi/badan surat. Gunakan placeholder:
-                    <code class="bg-slate-100 px-1.5 py-0.5 rounded text-teal-700 font-mono text-xs">&#123;&#123;nama&#125;&#125;</code>
-                    <code class="bg-slate-100 px-1.5 py-0.5 rounded text-teal-700 font-mono text-xs">&#123;&#123;nik&#125;&#125;</code>
-                    <code class="bg-slate-100 px-1.5 py-0.5 rounded text-teal-700 font-mono text-xs">&#123;&#123;alamat&#125;&#125;</code>
-                    <code class="bg-slate-100 px-1.5 py-0.5 rounded text-teal-700 font-mono text-xs">&#123;&#123;nomor_surat&#125;&#125;</code>
-                    <code class="bg-slate-100 px-1.5 py-0.5 rounded text-teal-700 font-mono text-xs">&#123;&#123;tanggal&#125;&#125;</code>
-                </p>
-                <textarea name="template_konten" rows="8"
-                          class="w-full px-4 py-3 border border-slate-200 rounded-xl bg-white font-mono text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition"
-                          placeholder="<p>Yang bertanda tangan...</p>&#10;<p>Nama: @{{nama}}</p>&#10;<p>NIK: @{{nik}}</p>">{{ old('template_konten') }}</textarea>
+            {{-- Syarat Dinamis --}}
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h2 class="font-bold text-gray-800 text-base">Persyaratan Pengajuan</h2>
+                    <button type="button" id="tambahSyarat"
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-lg hover:bg-teal-100 transition text-xs font-bold">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Tambah Syarat
+                    </button>
+                </div>
+                <div id="syaratContainer" class="space-y-3">
+                    <p id="emptyNote" class="text-center text-gray-400 text-sm py-4">Belum ada persyaratan. Klik "+ Tambah Syarat" untuk menambahkan.</p>
+                </div>
             </div>
 
-            <div class="flex items-center gap-3">
-                <input type="checkbox" id="is_aktif" name="is_aktif" value="1" checked class="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500">
-                <label for="is_aktif" class="text-sm font-medium text-gray-700">Aktifkan layanan ini segera (warga sudah bisa memilihnya)</label>
-            </div>
-        </div>
-
-        <!-- Syarat Dinamis -->
-        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-4">
-            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h2 class="font-bold text-gray-800 text-base">Persyaratan Pengajuan</h2>
-                <button type="button" id="tambahSyarat"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-teal-50 border border-teal-200 text-teal-700 rounded-lg hover:bg-teal-100 transition text-xs font-bold">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    Tambah Syarat
+            <div class="flex justify-end gap-3">
+                <a href="{{ route('staff.jenis_surat.index') }}" class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition text-sm shadow-sm">Batal</a>
+                <button type="submit" class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition text-sm shadow-sm">
+                    Simpan Jenis Surat
                 </button>
             </div>
+        </form>
+    </div>
 
-            <div id="syaratContainer" class="space-y-3">
-                <!-- Syarat rows will be added here -->
-                <p id="emptyNote" class="text-center text-gray-400 text-sm py-4">Belum ada persyaratan. Klik "+ Tambah Syarat" untuk menambahkan.</p>
-            </div>
-        </div>
-
-        <div class="flex justify-end gap-3">
-            <a href="{{ route('staff.jenis_surat.index') }}" class="px-6 py-2.5 bg-white border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition text-sm shadow-sm">Batal</a>
-            <button type="submit" class="px-6 py-2.5 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition text-sm shadow-sm hover:-translate-y-0.5">
-                Simpan Jenis Surat
-            </button>
-        </div>
-    </form>
+    {{-- ═══════════ KOLOM KANAN: PANEL CONTOH ═══════════ --}}
+    @include('master_surat._template_panel')
 </div>
 
-<!-- Template Row Syarat (tersembunyi) -->
+{{-- Syarat Row Template --}}
 <template id="syaratRowTemplate">
     <div class="syarat-row flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
         <div class="flex-1">
@@ -98,7 +124,7 @@
             </select>
         </div>
         <div class="flex items-center gap-2 shrink-0">
-            <input type="checkbox" name="syarat[__IDX__][is_wajib]" value="1" checked class="w-4 h-4 text-teal-600 border-gray-300 rounded" title="Wajib diisi">
+            <input type="checkbox" name="syarat[__IDX__][is_wajib]" value="1" checked class="w-4 h-4 text-teal-600 border-gray-300 rounded">
             <span class="text-xs text-gray-500">Wajib</span>
         </div>
         <button type="button" class="hapusSyarat w-8 h-8 flex items-center justify-center text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition shrink-0">
@@ -106,20 +132,86 @@
         </button>
     </div>
 </template>
+@endsection
 
+@push('scripts')
+{{-- Quill Editor CDN --}}
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<style>
+    #quillEditor { border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; }
+    .ql-toolbar { border: none !important; border-bottom: 1px solid #e2e8f0 !important; background: #f8fafc; }
+    .ql-container { border: none !important; font-family: 'Times New Roman', serif; font-size: 13px; }
+    .ql-editor { min-height: 240px; line-height: 1.7; padding: 16px 20px; }
+    .ql-editor p { margin-bottom: 8px; text-align: justify; }
+    .ql-editor table { border-collapse: collapse; margin-left: 20px; margin-bottom: 10px; }
+    .ql-editor td { padding: 2px 6px; vertical-align: top; }
+    /* Quill toolbar customization */
+    .ql-toolbar .ql-formats { margin-right: 8px; }
+</style>
 <script>
+// Initialize Quill editor
+const quill = new Quill('#quillEditor', {
+    theme: 'snow',
+    placeholder: 'Tulis isi/badan surat di sini... Gunakan tombol placeholder di atas untuk menyisipkan data otomatis seperti {{nama}}, {{nik}}, dsb.',
+    modules: {
+        toolbar: [
+            [{ 'header': [false, 1, 2, 3] }],
+            ['bold', 'italic', 'underline'],
+            [{ 'align': [] }],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            ['clean']
+        ]
+    }
+});
+
+// Pre-fill editor jika ada nilai lama (dari old() atau dari panel salin)
+const existingVal = document.getElementById('templateKonten').value.trim();
+if (existingVal) {
+    quill.clipboard.dangerouslyPasteHTML(existingVal);
+}
+
+// Sebelum submit, copy konten Quill ke hidden textarea
+document.getElementById('mainForm').addEventListener('submit', function() {
+    document.getElementById('templateKonten').value = quill.root.innerHTML;
+});
+
+// Insert placeholder ke posisi kursor Quill
+function insertPlaceholder(ph) {
+    quill.focus();
+    const range = quill.getSelection(true);
+    quill.insertText(range.index, ph, 'user');
+    quill.setSelection(range.index + ph.length);
+}
+
+// Salin dari panel kanan ke editor
+function salinTemplate(konten) {
+    quill.clipboard.dangerouslyPasteHTML(konten);
+    quill.focus();
+    showToast('✓ Template disalin ke editor');
+}
+
+function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-teal-700 text-white px-5 py-2.5 rounded-xl shadow-xl text-sm font-semibold z-50 pointer-events-none';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2200);
+}
+
+// Syarat rows
 let syaratCount = 0;
 const container = document.getElementById('syaratContainer');
 const emptyNote = document.getElementById('emptyNote');
-const template  = document.getElementById('syaratRowTemplate');
+const tpl       = document.getElementById('syaratRowTemplate');
 
 function updateEmpty() {
-    const rows = container.querySelectorAll('.syarat-row');
-    emptyNote.style.display = rows.length === 0 ? 'block' : 'none';
+    emptyNote.style.display = container.querySelectorAll('.syarat-row').length === 0 ? 'block' : 'none';
 }
 
 document.getElementById('tambahSyarat').addEventListener('click', () => {
-    const html = template.innerHTML.replaceAll('__IDX__', syaratCount++);
+    const html = tpl.innerHTML.replaceAll('__IDX__', syaratCount++);
     const div  = document.createElement('div');
     div.innerHTML = html;
     const row = div.firstElementChild;
@@ -128,4 +220,4 @@ document.getElementById('tambahSyarat').addEventListener('click', () => {
     updateEmpty();
 });
 </script>
-@endsection
+@endpush

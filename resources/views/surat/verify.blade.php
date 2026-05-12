@@ -94,8 +94,8 @@
             </dl>
         </div>
 
-        <!-- Yang Menyetujui -->
-        @if($permohonan->persetujuan)
+        @php $persetujuan = $permohonan->persetujuan->where('status_persetujuan','disetujui')->first(); @endphp
+        @if($persetujuan)
         <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
             <div class="px-6 py-4 bg-slate-50 border-b border-slate-100">
                 <h2 class="font-bold text-gray-800 flex items-center gap-2">
@@ -106,7 +106,7 @@
             <dl class="divide-y divide-slate-50">
                 <div class="px-6 py-4 flex justify-between items-center">
                     <dt class="text-sm text-gray-500 font-medium">Nama Kepala Desa</dt>
-                    <dd class="font-bold text-gray-900">{{ $permohonan->persetujuan->kepalaDesa->penduduk->nama ?? '-' }}</dd>
+                    <dd class="font-bold text-gray-900">{{ optional(optional($persetujuan->kepalaDesa)->penduduk)->nama ?? '-' }}</dd>
                 </div>
                 <div class="px-6 py-4 flex justify-between items-center">
                     <dt class="text-sm text-gray-500 font-medium">Jabatan</dt>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="px-6 py-4 flex justify-between items-center">
                     <dt class="text-sm text-gray-500 font-medium">Waktu Persetujuan</dt>
-                    <dd class="text-gray-700">{{ $permohonan->persetujuan->created_at->translatedFormat('d F Y, H:i') }} WIB</dd>
+                    <dd class="text-gray-700">{{ $persetujuan->created_at->translatedFormat('d F Y, H:i') }} WIB</dd>
                 </div>
             </dl>
         </div>
