@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081234567890',
             'alamat' => 'Jl. Medini RT 01 RW 01',
             'role' => 'warga',
+            'status_akun' => 'aktif', // Akun demo langsung aktif
         ]);
 
         // 2. Seed Staff Desa
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081234567891',
             'alamat' => 'Jl. Medini RT 02 RW 01',
             'role' => 'staff',
+            'status_akun' => 'aktif',
         ]);
 
         StaffDesa::create([
@@ -56,6 +58,7 @@ class DatabaseSeeder extends Seeder
             'no_hp' => '081234567892',
             'alamat' => 'Jl. Medini RT 03 RW 01',
             'role' => 'kades',
+            'status_akun' => 'aktif',
         ]);
 
         KepalaDesa::create([

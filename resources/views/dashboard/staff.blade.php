@@ -1,55 +1,112 @@
-@extends('layouts.app')
+@extends('layouts.staff')
 
 @section('title', 'Dashboard Staff')
+@section('page-title', 'Dashboard Verifikator')
+@section('page-subtitle', 'Daftar permohonan surat warga yang perlu diperiksa')
 
 @section('content')
-<div class="px-4 py-6 sm:px-0">
-    <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">Dashboard Staff (Verifikator)</h1>
-        <p class="mt-2 text-sm text-gray-600">Kelola dan verifikasi pengajuan surat warga</p>
+<div class="space-y-8 animate-fade-in-up">
+    <!-- Header Section -->
+    <div class="glass rounded-3xl p-8 border border-white/40 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-gradient-to-br from-teal-400 to-emerald-500 rounded-full blur-3xl opacity-20"></div>
+        <div class="relative z-10">
+            <h1 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-800 to-emerald-600">Verifikator Pelayanan</h1>
+            <p class="mt-2 text-gray-600 text-lg font-light">Periksa dan validasi dokumen pengajuan warga sebelum TTE Kepala Desa.</p>
+        </div>
+        <div class="flex gap-3 relative z-10">
+            <a href="{{ route('staff.akun.index') }}" class="relative inline-flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-5 rounded-xl shadow-md shadow-yellow-200 hover:-translate-y-0.5 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path></svg>
+                Verifikasi Akun
+                @if($totalAkunPending > 0)
+                    <span class="absolute -top-2 -right-2 inline-flex items-center justify-center w-6 h-6 bg-red-500 text-white text-xs font-black rounded-full shadow-lg border-2 border-white animate-pulse">
+                        {{ $totalAkunPending }}
+                    </span>
+                @endif
+            </a>
+            <a href="{{ route('staff.penduduk.index') }}" class="inline-flex items-center gap-2 bg-white/60 hover:bg-white text-teal-800 border border-teal-200/50 hover:border-teal-300 font-semibold py-2.5 px-5 rounded-xl shadow-sm transition-all duration-300 backdrop-blur-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                Data Penduduk
+            </a>
+            <a href="{{ route('staff.jenis_surat.index') }}" class="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-500 text-white hover:from-teal-700 hover:to-emerald-600 font-semibold py-2.5 px-5 rounded-xl shadow-md shadow-teal-200 hover:-translate-y-0.5 transition-all duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                Master Surat
+            </a>
+        </div>
     </div>
 
-    <!-- Table -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden border border-gray-200">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
-            <h2 class="text-lg font-medium text-gray-900">Antrean Permohonan Masuk</h2>
+    <!-- Antrean Verifikasi -->
+    <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+            <h2 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                <svg class="w-6 h-6 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                Daftar Permohonan Menunggu Verifikasi
+            </h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
-                    <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tgl Pengajuan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Surat</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($permohonan as $item)
-                    <tr>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->tanggal_pengajuan }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $item->penduduk->nama }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $item->jenisSurat->nama_surat }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($item->status == 'menunggu_verifikasi')
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu Verifikasi</span>
-                            @else
-                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{ ucfirst($item->status) }}</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                            <a href="#" class="text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded shadow-sm transition">Verifikasi</a>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">Tidak ada antrean permohonan saat ini.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        
+        <div class="glass rounded-3xl overflow-hidden border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-gray-50/50 text-gray-500 text-xs uppercase tracking-wider font-semibold border-b border-gray-100">
+                            <th class="px-6 py-4">Waktu Masuk</th>
+                            <th class="px-6 py-4">Pemohon</th>
+                            <th class="px-6 py-4">Jenis Surat</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-center">Tindakan</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100 text-sm">
+                        @forelse($permohonan as $item)
+                        <tr class="hover:bg-teal-50/30 transition-colors group">
+                            <td class="px-6 py-5 text-gray-500 font-medium">
+                                {{ $item->created_at->format('d M Y') }} <br>
+                                <span class="text-xs font-light">{{ $item->created_at->format('H:i') }}</span>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="font-bold text-gray-900">{{ $item->penduduk->nama }}</div>
+                                <div class="text-xs text-gray-500">NIK: {{ $item->penduduk->nik }}</div>
+                            </td>
+                            <td class="px-6 py-5 font-medium text-gray-700">
+                                {{ $item->jenisSurat->nama_surat }}
+                            </td>
+                            <td class="px-6 py-5">
+                                @if($item->status == 'revisi')
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-red-100/80 text-red-800 border border-red-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span> Mengalami Revisi
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100/80 text-yellow-800 border border-yellow-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Perlu Diperiksa
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-5 text-center">
+                                <a href="{{ route('staff.permohonan.show', $item->id_permohonan_surat) }}" class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-teal-600 text-white rounded-xl shadow-sm shadow-teal-200 hover:bg-teal-700 hover:-translate-y-0.5 transition-all text-sm font-semibold">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Validasi Berkas
+                                </a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-12 text-center">
+                                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-teal-50 mb-4 border border-teal-100">
+                                    <svg class="w-8 h-8 text-teal-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                                </div>
+                                <p class="text-gray-500 font-medium text-lg">Tidak ada berkas untuk diverifikasi.</p>
+                                <p class="text-sm text-gray-400 mt-1">Anda sudah memproses semua antrean.</p>
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 @endsection

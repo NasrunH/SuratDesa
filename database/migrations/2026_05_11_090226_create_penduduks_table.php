@@ -18,6 +18,8 @@ return new class extends Migration
             $table->text('alamat')->nullable();
             $table->string('foto_ktp')->nullable();
             $table->enum('role', ['warga', 'staff', 'kades'])->default('warga');
+            $table->enum('status_akun', ['pending', 'aktif', 'nonaktif'])->default('pending');
+            $table->text('catatan_penolakan')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
