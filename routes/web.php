@@ -12,7 +12,9 @@ use App\Http\Controllers\PendudukController;
 // =============================================
 // PUBLIC ROUTES (No Auth)
 // =============================================
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('/surat/verify/{qr_code}', [SuratPublicController::class, 'verify'])->name('surat.verify');
 
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
