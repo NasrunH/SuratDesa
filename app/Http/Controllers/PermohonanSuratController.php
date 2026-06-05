@@ -196,32 +196,6 @@ class PermohonanSuratController extends Controller
                          ->with('success', 'Verifikasi berhasil disimpan.');
     }
 
-    public function masterPenduduk(Request $request)
-    {
-        if (Auth::user()->role !== 'staff') abort(403);
-
-        $tab    = $request->get('tab', 'semua');
-        $search = $request->get('search', '');
-
-        $query = Penduduk::query()
-            ->when($search, fn($q) => $q->where('nama', 'like', "%$search%")
-                                        ->orWhere('nik', 'like', "%$search%"));
-
-        if (in_array($tab, ['warga', 'staff', 'kades'])) {
-            $query->where('role', $tab);
-        }
-
-        $penduduk = $query->orderBy('created_at', 'desc')->paginate(15)->withQueryString();
-
-        $counts = [
-            'semua' => Penduduk::count(),
-            'warga' => Penduduk::where('role', 'warga')->count(),
-            'staff' => Penduduk::where('role', 'staff')->count(),
-            'kades' => Penduduk::where('role', 'kades')->count(),
-        ];
-
-        return view('permohonan.master_penduduk', compact('penduduk', 'counts', 'tab', 'search'));
-    }
 
     // ==========================================
     // KEPALA DESA

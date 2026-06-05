@@ -7,6 +7,7 @@ use App\Http\Controllers\PermohonanSuratController;
 use App\Http\Controllers\AkunController;
 use App\Http\Controllers\MasterSuratController;
 use App\Http\Controllers\SuratPublicController;
+use App\Http\Controllers\PendudukController;
 
 // =============================================
 // PUBLIC ROUTES (No Auth)
@@ -62,8 +63,14 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/jenis-surat/{id}/toggle',    [MasterSuratController::class, 'toggleStatus'])->name('jenis_surat.toggle');
         Route::delete('/jenis-surat/{id}',         [MasterSuratController::class, 'destroy'])->name('jenis_surat.destroy');
 
-        // Data Penduduk
-        Route::get('/penduduk',                    [PermohonanSuratController::class, 'masterPenduduk'])->name('penduduk.index');
+        // Data Penduduk (CRUD)
+        Route::get('/penduduk',                    [PendudukController::class, 'index'])->name('penduduk.index');
+        Route::get('/penduduk/tambah',             [PendudukController::class, 'create'])->name('penduduk.create');
+        Route::post('/penduduk',                   [PendudukController::class, 'store'])->name('penduduk.store');
+        Route::get('/penduduk/{id}',               [PendudukController::class, 'show'])->name('penduduk.show');
+        Route::get('/penduduk/{id}/edit',          [PendudukController::class, 'edit'])->name('penduduk.edit');
+        Route::put('/penduduk/{id}',               [PendudukController::class, 'update'])->name('penduduk.update');
+        Route::delete('/penduduk/{id}',            [PendudukController::class, 'destroy'])->name('penduduk.destroy');
     });
 
     // --- KEPALA DESA ---
