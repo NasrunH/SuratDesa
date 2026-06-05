@@ -33,12 +33,12 @@
 
             <div class="space-y-4">
                 <div>
-                    <label for="nik" class="block text-sm font-semibold text-gray-700 mb-1.5">Nomor Induk Kependudukan (NIK)</label>
+                    <label for="login" class="block text-sm font-semibold text-gray-700 mb-1.5">Nomor Induk Kependudukan (NIK) / Email</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path></svg>
                         </div>
-                        <input id="nik" name="nik" type="text" required value="{{ old('nik') }}" class="appearance-none block w-full pl-11 pr-3 py-3.5 border border-gray-200 rounded-xl leading-5 bg-white/60 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition duration-150 ease-in-out sm:text-sm shadow-sm" placeholder="Masukkan 16 digit NIK">
+                        <input id="login" name="login" type="text" required value="{{ old('login') }}" class="appearance-none block w-full pl-11 pr-3 py-3.5 border border-gray-200 rounded-xl leading-5 bg-white/60 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition duration-150 ease-in-out sm:text-sm shadow-sm" placeholder="Masukkan NIK atau Email">
                     </div>
                 </div>
                 <div>
@@ -47,7 +47,13 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
                         </div>
-                        <input id="password" name="password" type="password" required class="appearance-none block w-full pl-11 pr-3 py-3.5 border border-gray-200 rounded-xl leading-5 bg-white/60 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition duration-150 ease-in-out sm:text-sm shadow-sm" placeholder="••••••••">
+                        <input id="password" name="password" type="password" required class="appearance-none block w-full pl-11 pr-12 py-3.5 border border-gray-200 rounded-xl leading-5 bg-white/60 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition duration-150 ease-in-out sm:text-sm shadow-sm" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-450 hover:text-gray-600 focus:outline-none">
+                            <!-- Open Eye Icon (Visible when type is text) -->
+                            <svg class="h-5 w-5 eye-open hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <!-- Closed Eye Icon (Visible when type is password) -->
+                            <svg class="h-5 w-5 eye-closed" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L8.62 8.62m4.52 4.52l1.26 1.26M21 21l-18-18"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -81,6 +87,23 @@
         </form>
     </div>
 </div>
+
+<script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const eyeOpen = btn.querySelector('.eye-open');
+        const eyeClosed = btn.querySelector('.eye-closed');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+        } else {
+            input.type = 'password';
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+        }
+    }
+</script>
 
 <style>
     .animate-fade-in-up { animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }

@@ -57,8 +57,14 @@
                 <!-- Password -->
                 <div>
                     <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Password Baru (Kosongkan jika tidak diubah)</label>
-                    <input type="password" name="password" id="password" placeholder="Minimal 6 karakter"
-                           class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-teal-400 transition @error('password') border-red-300 bg-red-50/20 @enderror">
+                    <div class="relative">
+                        <input type="password" name="password" id="password" placeholder="Minimal 6 karakter"
+                               class="w-full pl-4 pr-12 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-400/50 focus:border-teal-400 transition @error('password') border-red-300 bg-red-50/20 @enderror">
+                        <button type="button" onclick="togglePasswordVisibility('password', this)" class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-650 focus:outline-none">
+                            <svg class="h-5 w-5 eye-open hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            <svg class="h-5 w-5 eye-closed" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L8.62 8.62m4.52 4.52l1.26 1.26M21 21l-18-18"/></svg>
+                        </button>
+                    </div>
                     @error('password') <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p> @enderror
                 </div>
 
@@ -151,6 +157,21 @@
 </div>
 
 <script>
+    function togglePasswordVisibility(inputId, btn) {
+        const input = document.getElementById(inputId);
+        const eyeOpen = btn.querySelector('.eye-open');
+        const eyeClosed = btn.querySelector('.eye-closed');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOpen.classList.remove('hidden');
+            eyeClosed.classList.add('hidden');
+        } else {
+            input.type = 'password';
+            eyeOpen.classList.add('hidden');
+            eyeClosed.classList.remove('hidden');
+        }
+    }
+
     function toggleRoleFields() {
         const role = document.getElementById('role').value;
         const staffFields = document.getElementById('staff_fields');
