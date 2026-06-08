@@ -39,6 +39,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/permohonan/form/{id}',        [PermohonanSuratController::class, 'form'])->name('permohonan.form');
         Route::post('/permohonan/store',           [PermohonanSuratController::class, 'store'])->name('permohonan.store');
         Route::get('/permohonan/{id}',             [PermohonanSuratController::class, 'show'])->name('permohonan.show');
+        Route::get('/permohonan/{id}/edit',        [PermohonanSuratController::class, 'edit'])->name('permohonan.edit');
+        Route::put('/permohonan/{id}',             [PermohonanSuratController::class, 'update'])->name('permohonan.update');
         Route::get('/permohonan/{id}/download',    [PermohonanSuratController::class, 'download'])->name('permohonan.download');
     });
 

@@ -26,12 +26,14 @@ class DashboardController extends Controller
                 ->paginate(8)
                 ->withQueryString();
 
+            $jenisSuratList = JenisSurat::where('is_aktif', true)->get();
+
             $pengumuman = [
                 ['judul' => 'Jadwal Pembuatan E-KTP Keliling', 'tanggal' => '12 Mei 2026', 'isi' => 'Perekaman E-KTP akan diadakan di balai desa mulai jam 08:00 hingga 14:00.'],
                 ['judul' => 'Penyaluran BLT Dana Desa', 'tanggal' => '15 Mei 2026', 'isi' => 'Penyaluran BLT akan dilakukan secara bertahap. Harap membawa undangan dan fotokopi KK.'],
             ];
 
-            return view('dashboard.warga', compact('permohonan', 'pengumuman', 'search', 'sort', 'dir'));
+            return view('dashboard.warga', compact('permohonan', 'pengumuman', 'search', 'sort', 'dir', 'jenisSuratList'));
 
         } elseif ($user->role === 'staff') {
             // Redirect ke halaman permohonan staff (sudah ada tab/pagination di sana)

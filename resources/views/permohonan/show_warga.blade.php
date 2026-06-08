@@ -14,13 +14,35 @@
             <h1 class="text-3xl font-bold text-gray-900">Lacak Permohonan</h1>
         </div>
         
-        @if(in_array($permohonan->status, ['disetujui', 'selesai']))
-            <a href="{{ route('warga.permohonan.download', $permohonan->id_permohonan_surat) }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-sm flex items-center transition">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                Unduh PDF Surat
-            </a>
-        @endif
+        <div class="flex items-center gap-3">
+            @if(in_array($permohonan->status, ['menunggu_verifikasi', 'revisi']))
+                <a href="{{ route('warga.permohonan.edit', $permohonan->id_permohonan_surat) }}" class="inline-flex items-center gap-1.5 px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-xl shadow-md shadow-yellow-100 hover:shadow-lg transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Ubah Data / Perbaiki Berkas
+                </a>
+            @endif
+            @if(in_array($permohonan->status, ['disetujui', 'selesai']))
+                <a href="{{ route('warga.permohonan.download', $permohonan->id_permohonan_surat) }}" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-sm flex items-center transition">
+                    <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    Unduh PDF Surat
+                </a>
+            @endif
+        </div>
     </div>
+
+    @if(session('success'))
+        <div class="glass border-l-4 border-green-500 p-5 rounded-2xl flex gap-3 items-start shadow-sm mb-6">
+            <svg class="w-6 h-6 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <p class="text-gray-700 font-medium">{{ session('success') }}</p>
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="glass border-l-4 border-red-500 p-5 rounded-2xl flex gap-3 items-start shadow-sm mb-6 bg-red-50/10">
+            <svg class="w-6 h-6 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <p class="text-gray-700 font-medium">{{ session('error') }}</p>
+        </div>
+    @endif
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Sidebar Info -->
@@ -43,6 +65,8 @@
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu Verifikasi</span>
                             @elseif($permohonan->status == 'revisi')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Revisi</span>
+                            @elseif($permohonan->status == 'ditolak')
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>
                             @elseif($permohonan->status == 'menunggu_persetujuan')
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Menunggu TTD Kades</span>
                             @elseif(in_array($permohonan->status, ['disetujui', 'selesai']))
@@ -71,7 +95,7 @@
                 
                 @if($permohonan->status == 'revisi')
                     <div class="mt-4">
-                        <a href="#" class="bg-white text-red-700 border border-red-300 font-bold py-1 px-3 rounded shadow-sm text-sm hover:bg-red-100">Perbaiki Berkas</a>
+                        <a href="{{ route('warga.permohonan.edit', $permohonan->id_permohonan_surat) }}" class="bg-white text-red-700 border border-red-300 font-bold py-1.5 px-4 rounded shadow-sm text-sm hover:bg-red-150 transition">Perbaiki Berkas / Ubah Data</a>
                     </div>
                 @endif
             </div>

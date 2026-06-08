@@ -153,7 +153,7 @@
 // Initialize Quill editor
 const quill = new Quill('#quillEditor', {
     theme: 'snow',
-    placeholder: 'Tulis isi/badan surat di sini... Gunakan tombol placeholder di atas untuk menyisipkan data otomatis seperti {{nama}}, {{nik}}, dsb.',
+    placeholder: 'Tulis isi/badan surat di sini... Gunakan tombol placeholder di atas untuk menyisipkan data otomatis seperti @{{nama}}, @{{nik}}, dsb.',
     modules: {
         toolbar: [
             [{ 'header': [false, 1, 2, 3] }],

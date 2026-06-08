@@ -83,6 +83,91 @@ class PermohonanSuratController extends Controller
         return view('permohonan.show_warga', compact('permohonan'));
     }
 
+    public function edit($id)
+    {
+        $permohonan = PermohonanSurat::with(['jenisSurat.syarat' => fn($q) => $q->orderBy('urutan'), 'isian.syarat'])
+                        ->where('id_permohonan_surat', $id)
+                        ->where('id_penduduk', Auth::user()->id_penduduk)
+                        ->firstOrFail();
+
+        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi'])) {
+            return redirect()->route('warga.permohonan.show', $id)
+                             ->with('error', 'Pengajuan yang sedang diproses atau sudah selesai tidak dapat diubah.');
+        }
+
+        $isianMap = $permohonan->isian->keyBy('id_syarat_jenis_surat');
+
+        return view('permohonan.edit_warga', compact('permohonan', 'isianMap'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $permohonan = PermohonanSurat::with(['jenisSurat.syarat', 'isian'])
+                        ->where('id_permohonan_surat', $id)
+                        ->where('id_penduduk', Auth::user()->id_penduduk)
+                        ->firstOrFail();
+
+        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi'])) {
+            return redirect()->route('warga.permohonan.show', $id)
+                             ->with('error', 'Pengajuan yang sedang diproses atau sudah selesai tidak dapat diubah.');
+        }
+
+        $rules = [];
+        foreach ($permohonan->jenisSurat->syarat as $syarat) {
+            $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
+            $existingIsian = $permohonan->isian->where('id_syarat_jenis_surat', $syarat->id_syarat_jenis_surat)->first();
+
+            if ($syarat->tipe_input == 'file') {
+                if ($existingIsian && $existingIsian->file_path) {
+                    $rules[$inputName] = 'nullable|file|max:5120';
+                } else {
+                    $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|file|max:5120';
+                }
+            } else {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable');
+            }
+        }
+
+        $request->validate($rules);
+
+        foreach ($permohonan->jenisSurat->syarat as $syarat) {
+            $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
+            $isian = $permohonan->isian->where('id_syarat_jenis_surat', $syarat->id_syarat_jenis_surat)->first();
+            
+            if (!$isian) {
+                $isian = new IsianPermohonan([
+                    'id_isian_permohonan'   => Str::uuid(),
+                    'id_permohonan_surat'   => $permohonan->id_permohonan_surat,
+                    'id_syarat_jenis_surat' => $syarat->id_syarat_jenis_surat,
+                ]);
+            }
+
+            if ($syarat->tipe_input == 'file') {
+                if ($request->hasFile($inputName)) {
+                    if ($isian->file_path) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($isian->file_path);
+                    }
+                    $path = $request->file($inputName)->store('lampiran_surat', 'public');
+                    $isian->file_path = $path;
+                    $isian->nilai_teks = null;
+                    $isian->save();
+                }
+            } else {
+                $isian->nilai_teks = $request->input($inputName);
+                $isian->file_path = null;
+                $isian->save();
+            }
+        }
+
+        // Reset status pengajuan menjadi menunggu_verifikasi setelah diedit oleh warga
+        $permohonan->status = 'menunggu_verifikasi';
+        $permohonan->catatan_terakhir = null;
+        $permohonan->save();
+
+        return redirect()->route('warga.permohonan.show', $id)
+                         ->with('success', 'Data pengajuan permohonan berhasil diperbarui dan dikirim ulang.');
+    }
+
     public function download($id)
     {
         $permohonan = PermohonanSurat::with(['jenisSurat', 'isian.syarat', 'penduduk'])
