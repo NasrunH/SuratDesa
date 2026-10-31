@@ -27,14 +27,16 @@
         ul, ol { margin: 0 0 8px 30px; }
 
         /* TANDA TANGAN */
-        .ttd-outer { width: 100%; margin-top: 40px; }
-        .ttd-inner { width: 220px; float: right; text-align: center; }
-        .ttd-kota   { margin-bottom: 3px; }
-        .ttd-jabatan{ font-weight: bold; margin-bottom: 6px; }
-        .ttd-qr     { text-align: center; margin: 0 auto 6px auto; width: 80px; }
-        .ttd-nama   { font-weight: bold; text-decoration: underline; }
-        .ttd-nip    { font-size: 10pt; }
-        .clearfix   { clear: both; }
+        .ttd-table { width: 100%; margin: 35px 0 0 0; border-collapse: collapse; border: none; }
+        .ttd-table td { border: none; padding: 0; }
+        .ttd-spacer { width: 55%; vertical-align: top; }
+        .ttd-cell { width: 45%; text-align: center; vertical-align: top; }
+        .ttd-kota   { font-size: 11pt; margin-bottom: 3px; text-align: center; }
+        .ttd-jabatan{ font-size: 11pt; font-weight: bold; margin-bottom: 8px; text-align: center; }
+        .ttd-qr     { text-align: center; margin: 0 auto 8px auto; }
+        .ttd-qr img { display: inline-block; margin: 0 auto; vertical-align: middle; }
+        .ttd-nama   { font-size: 11pt; font-weight: bold; text-decoration: underline; text-align: center; margin-bottom: 2px; }
+        .ttd-nip    { font-size: 10pt; text-align: center; }
 
         /* FOOTER */
         .footer { margin-top: 28px; border-top: 1px solid #bbb; padding-top: 5px; font-size: 8.5pt; color: #666; font-style: italic; }
@@ -43,31 +45,44 @@
 <body>
 
 {{-- ── KOP SURAT ── --}}
+@php
+    $logoBase64 = null;
+    $possibleLogos = [
+        public_path('images/logo.png'),
+        public_path('images/logo-desa.png')
+    ];
+    foreach ($possibleLogos as $p) {
+        if (file_exists($p)) {
+            $mime = pathinfo($p, PATHINFO_EXTENSION) === 'svg' ? 'image/svg+xml' : 'image/png';
+            $logoBase64 = 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($p));
+            break;
+        }
+    }
+@endphp
 <table class="kop-table">
     <tr>
         <td class="kop-logo-cell">
-            {{-- Logo Placeholder — ganti src dengan asset logo desa asli --}}
-            <img src="{{ public_path('images/logo-desa.png') }}" width="65" height="65"
-                 onerror="this.style.display='none'"
-                 alt="Logo Desa Medini" style="display:block; margin:auto;">
-            {{-- Fallback SVG jika logo tidak ada --}}
-            <svg width="65" height="65" viewBox="0 0 65 65" xmlns="http://www.w3.org/2000/svg"
-                 style="display:block; margin:auto;">
-                <circle cx="32" cy="32" r="30" fill="#f0f4f0" stroke="#555" stroke-width="1.5"/>
-                <circle cx="32" cy="32" r="22" fill="none" stroke="#555" stroke-width="1"/>
-                <line x1="2" y1="32" x2="62" y2="32" stroke="#555" stroke-width="0.8"/>
-                <path d="M32 2 Q44 32 32 62" fill="none" stroke="#555" stroke-width="0.8"/>
-                <path d="M32 2 Q20 32 32 62" fill="none" stroke="#555" stroke-width="0.8"/>
-                <line x1="11" y1="13" x2="53" y2="13" stroke="#555" stroke-width="0.8"/>
-                <line x1="11" y1="51" x2="53" y2="51" stroke="#555" stroke-width="0.8"/>
-                <text x="32" y="37" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">MDN</text>
-            </svg>
+            @if($logoBase64)
+                <img src="{{ $logoBase64 }}" width="65" alt="Logo Desa Medini" style="display:block; margin:auto;">
+            @else
+                <svg width="65" height="65" viewBox="0 0 65 65" xmlns="http://www.w3.org/2000/svg"
+                     style="display:block; margin:auto;">
+                    <circle cx="32" cy="32" r="30" fill="#f0f4f0" stroke="#555" stroke-width="1.5"/>
+                    <circle cx="32" cy="32" r="22" fill="none" stroke="#555" stroke-width="1"/>
+                    <line x1="2" y1="32" x2="62" y2="32" stroke="#555" stroke-width="0.8"/>
+                    <path d="M32 2 Q44 32 32 62" fill="none" stroke="#555" stroke-width="0.8"/>
+                    <path d="M32 2 Q20 32 32 62" fill="none" stroke="#555" stroke-width="0.8"/>
+                    <line x1="11" y1="13" x2="53" y2="13" stroke="#555" stroke-width="0.8"/>
+                    <line x1="11" y1="51" x2="53" y2="51" stroke="#555" stroke-width="0.8"/>
+                    <text x="32" y="37" text-anchor="middle" font-size="10" fill="#333" font-weight="bold">MDN</text>
+                </svg>
+            @endif
         </td>
         <td class="kop-text-cell">
             <div class="kop-prov">PEMERINTAH KABUPATEN KUDUS</div>
             <div class="kop-kec">KECAMATAN UNDAAN</div>
             <div class="kop-desa">DESA MEDINI</div>
-            <div class="kop-addr">Jl. Medini Raya No. 1, Undaan, Kudus, Jawa Tengah 59372<br>Telp. (0291) XXXXXX | Email: medini@kudus.go.id</div>
+            <div class="kop-addr">Jl. Medini Raya No. 1, Undaan, Kudus, Jawa Tengah 59372</div>
         </td>
     </tr>
 </table>
@@ -129,18 +144,20 @@
     $approver  = $permohonan->persetujuan->where('status_persetujuan','disetujui')->first();
     $namaKades = optional(optional(optional($approver)->kepalaDesa)->penduduk)->nama ?? 'KEPALA DESA';
 @endphp
-<div class="ttd-outer">
-    <div class="ttd-inner">
-        <p class="ttd-kota">Medini, {{ \Carbon\Carbon::parse($permohonan->tanggal_terbit)->translatedFormat('d F Y') }}</p>
-        <p class="ttd-jabatan">Kepala Desa Medini</p>
-        <div class="ttd-qr">
-            <img width="75" src="data:image/svg+xml;base64,{!! base64_encode($qrCode) !!}" alt="QR">
-        </div>
-        <p class="ttd-nama">{{ strtoupper($namaKades) }}</p>
-        <p class="ttd-nip">NIP. -</p>
-    </div>
-    <div class="clearfix"></div>
-</div>
+<table class="ttd-table">
+    <tr>
+        <td class="ttd-spacer"></td>
+        <td class="ttd-cell" align="center">
+            <div class="ttd-kota">Medini, {{ \Carbon\Carbon::parse($permohonan->tanggal_terbit)->translatedFormat('d F Y') }}</div>
+            <div class="ttd-jabatan">Kepala Desa Medini</div>
+            <div class="ttd-qr" align="center">
+                <img width="75" height="75" src="data:image/svg+xml;base64,{!! base64_encode($qrCode) !!}" alt="QR" style="display:inline-block; margin:0 auto;">
+            </div>
+            <div class="ttd-nama">{{ strtoupper($namaKades) }}</div>
+            <div class="ttd-nip">NIP. -</div>
+        </td>
+    </tr>
+</table>
 
 {{-- ── FOOTER ── --}}
 <div class="footer">

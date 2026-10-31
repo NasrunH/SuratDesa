@@ -24,8 +24,14 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-green-200">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <div class="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md border border-green-100">
+                            @if(file_exists(public_path('images/logo.png')))
+                                <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
+                            @else
+                                <div class="w-full h-full rounded-lg bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center text-white">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                </div>
+                            @endif
                         </div>
                         <div class="flex-shrink-0 font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-700 to-emerald-600">
                             SIPESDA MEDINI

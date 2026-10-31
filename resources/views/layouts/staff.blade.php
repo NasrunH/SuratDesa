@@ -20,8 +20,12 @@
     <aside class="w-64 flex-shrink-0 bg-gradient-to-b from-teal-800 to-teal-950 text-white flex flex-col shadow-2xl">
         <!-- Logo -->
         <div class="flex items-center gap-3 px-5 py-5 border-b border-teal-700/50">
-            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shadow">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center shadow p-1">
+                @if(file_exists(public_path('images/logo.png')))
+                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
+                @else
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                @endif
             </div>
             <div>
                 <div class="font-bold text-sm tracking-wider leading-none">SIPESDA</div>
