@@ -8,6 +8,7 @@ use App\Http\Controllers\AkunController;
 use App\Http\Controllers\MasterSuratController;
 use App\Http\Controllers\SuratPublicController;
 use App\Http\Controllers\PendudukController;
+use App\Http\Controllers\ProfileController;
 
 // =============================================
 // PUBLIC ROUTES (No Auth)
@@ -44,6 +45,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profil',    [ProfileController::class, 'show'])->name('profil');
 
     // --- PREVIEW & DOWNLOAD SURAT (DomPDF) ---
     Route::get('/permohonan/{id}/preview',  [PermohonanSuratController::class, 'preview'])->name('permohonan.preview');

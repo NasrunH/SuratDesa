@@ -28,12 +28,19 @@ class DashboardController extends Controller
 
             $jenisSuratList = JenisSurat::where('is_aktif', true)->get();
 
+            $stats = [
+                'total'   => PermohonanSurat::where('id_penduduk', $user->id_penduduk)->count(),
+                'proses'  => PermohonanSurat::where('id_penduduk', $user->id_penduduk)->whereIn('status', ['menunggu_verifikasi', 'menunggu_persetujuan'])->count(),
+                'revisi'  => PermohonanSurat::where('id_penduduk', $user->id_penduduk)->where('status', 'revisi')->count(),
+                'selesai' => PermohonanSurat::where('id_penduduk', $user->id_penduduk)->whereIn('status', ['disetujui', 'selesai'])->count(),
+            ];
+
             $pengumuman = [
                 ['judul' => 'Jadwal Pembuatan E-KTP Keliling', 'tanggal' => '12 Mei 2026', 'isi' => 'Perekaman E-KTP akan diadakan di balai desa mulai jam 08:00 hingga 14:00.'],
                 ['judul' => 'Penyaluran BLT Dana Desa', 'tanggal' => '15 Mei 2026', 'isi' => 'Penyaluran BLT akan dilakukan secara bertahap. Harap membawa undangan dan fotokopi KK.'],
             ];
 
-            return view('dashboard.warga', compact('permohonan', 'pengumuman', 'search', 'sort', 'dir', 'jenisSuratList'));
+            return view('dashboard.warga', compact('permohonan', 'pengumuman', 'search', 'sort', 'dir', 'jenisSuratList', 'stats'));
 
         } elseif ($user->role === 'staff') {
             // Redirect ke halaman permohonan staff (sudah ada tab/pagination di sana)
