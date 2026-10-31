@@ -16,12 +16,12 @@
             <h1 class="text-3xl font-bold text-gray-900">Verifikasi Berkas Pemohon</h1>
         </div>
         <div class="flex items-center gap-3">
+            @if(in_array($permohonan->status, ['disetujui', 'selesai']))
             <button type="button" onclick="openPdfPreview('{{ route('permohonan.preview', $permohonan->id_permohonan_surat) }}', '{{ $permohonan->jenisSurat->nama_surat }}', '{{ route('permohonan.download', $permohonan->id_permohonan_surat) }}')"
                     class="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md shadow-teal-200 transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                Pratinjau Draf Surat (DomPDF)
+                Pratinjau Surat
             </button>
-            @if(in_array($permohonan->status, ['disetujui', 'selesai']))
             <a href="{{ route('permohonan.download', $permohonan->id_permohonan_surat) }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-900 text-white font-bold rounded-xl shadow transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Unduh PDF

@@ -170,13 +170,14 @@ class PermohonanSuratController extends Controller
 
     /**
      * Pratinjau dokumen surat secara inline menggunakan DomPDF (stream).
-     * Dapat diakses warga pemilik, staff desa, atau kades.
+     * Hanya dapat diakses saat surat sudah berstatus disetujui atau selesai.
      */
     public function preview($id)
     {
         $user  = Auth::user();
         $query = PermohonanSurat::with(['jenisSurat', 'isian.syarat', 'penduduk', 'persetujuan.kepalaDesa.penduduk'])
-                    ->where('id_permohonan_surat', $id);
+                    ->where('id_permohonan_surat', $id)
+                    ->whereIn('status', ['disetujui', 'selesai']);
 
         if ($user->role === 'warga') {
             $permohonan = $query->where('id_penduduk', $user->id_penduduk)->firstOrFail();
@@ -184,23 +185,12 @@ class PermohonanSuratController extends Controller
             $permohonan = $query->firstOrFail();
         }
 
-        // Siapkan QR Code atau placeholder jika belum disetujui
-        $qrValue = $permohonan->qr_code 
-            ? route('surat.verify', $permohonan->qr_code) 
-            : url('/surat/verify/preview');
-        $qrCode  = QrCode::format('svg')->size(100)->generate($qrValue);
-
-        // Jika nomor surat atau tanggal terbit belum ada (masih draf), set nilai sementara untuk preview
-        if (!$permohonan->nomor_surat) {
-            $permohonan->nomor_surat = 'DRAFT-BELUM-TERBIT';
-        }
-        if (!$permohonan->tanggal_terbit) {
-            $permohonan->tanggal_terbit = now();
-        }
+        $qrCode = QrCode::format('svg')->size(100)
+                         ->generate(route('surat.verify', $permohonan->qr_code));
 
         $pdf = Pdf::loadView('permohonan.pdf_template', compact('permohonan', 'qrCode'));
 
-        $filename = 'Preview_Surat_' . str_replace(['/', '\\', ' '], '-', $permohonan->nomor_surat) . '.pdf';
+        $filename = 'Surat_' . str_replace(['/', '\\', ' '], '-', $permohonan->nomor_surat) . '.pdf';
 
         return $pdf->stream($filename);
     }
