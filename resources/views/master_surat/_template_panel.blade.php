@@ -5,18 +5,39 @@ $contohTemplates = [
     [
         'nama'  => 'Surat Keterangan Domisili',
         'konten'=> '<p>Yang bertanda tangan di bawah ini, Kepala Desa Medini, Kecamatan Undaan, Kabupaten Kudus, dengan ini menerangkan bahwa:</p><table style="margin-left:20px;border-collapse:collapse;"><tr><td style="width:150px">Nama Lengkap</td><td style="width:12px">:</td><td><strong>[[nama]]</strong></td></tr><tr><td>NIK</td><td>:</td><td>[[nik]]</td></tr><tr><td>Alamat</td><td>:</td><td>[[alamat]]</td></tr></table><p>Orang tersebut di atas adalah benar-benar warga yang berdomisili di Desa Medini, Kecamatan Undaan, Kabupaten Kudus. Surat keterangan ini dibuat atas permintaan yang bersangkutan untuk keperluan administrasi.</p><p>Demikian surat keterangan ini dibuat agar dapat dipergunakan sebagaimana mestinya.</p>',
+        'syarat' => [
+            ['nama' => 'Foto KTP', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Foto Kartu Keluarga', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Surat Pengantar RT/RW', 'tipe' => 'file', 'is_wajib' => true],
+        ],
     ],
     [
         'nama'  => 'Surat Keterangan Tidak Mampu (SKTM)',
         'konten'=> '<p>Yang bertanda tangan di bawah ini, Kepala Desa Medini, Kecamatan Undaan, Kabupaten Kudus, menerangkan bahwa:</p><table style="margin-left:20px;border-collapse:collapse;"><tr><td style="width:150px">Nama Lengkap</td><td style="width:12px">:</td><td><strong>[[nama]]</strong></td></tr><tr><td>NIK</td><td>:</td><td>[[nik]]</td></tr><tr><td>Alamat</td><td>:</td><td>[[alamat]]</td></tr></table><p>Orang tersebut di atas adalah benar-benar warga Desa Medini yang tergolong dalam keluarga tidak mampu / prasejahtera berdasarkan data Pemerintah Desa Medini.</p><p>Surat keterangan ini diberikan untuk digunakan sebagai persyaratan administrasi dan tidak untuk keperluan lainnya.</p><p>Demikian surat keterangan ini kami buat dengan sebenar-benarnya agar dapat digunakan sebagaimana mestinya.</p>',
+        'syarat' => [
+            ['nama' => 'Foto KTP', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Foto Kartu Keluarga', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Surat Pengantar RT/RW', 'tipe' => 'file', 'is_wajib' => true],
+        ],
     ],
     [
         'nama'  => 'Surat Keterangan Usaha (SKU)',
         'konten'=> '<p>Yang bertanda tangan di bawah ini, Kepala Desa Medini, Kecamatan Undaan, Kabupaten Kudus, menerangkan bahwa:</p><table style="margin-left:20px;border-collapse:collapse;"><tr><td style="width:150px">Nama Lengkap</td><td style="width:12px">:</td><td><strong>[[nama]]</strong></td></tr><tr><td>NIK</td><td>:</td><td>[[nik]]</td></tr><tr><td>Alamat</td><td>:</td><td>[[alamat]]</td></tr><tr><td>Jenis Usaha</td><td>:</td><td>[[syarat.Jenis Usaha]]</td></tr><tr><td>Lokasi Usaha</td><td>:</td><td>[[syarat.Lokasi Usaha]]</td></tr></table><p>Orang tersebut di atas adalah benar-benar warga Desa Medini yang menjalankan usaha sebagaimana tercantum di atas. Surat Keterangan Usaha (SKU) ini dibuat untuk keperluan permodalan / administrasi usaha.</p><p>Demikian surat keterangan ini dibuat agar dapat dipergunakan sebagaimana mestinya.</p>',
+        'syarat' => [
+            ['nama' => 'Jenis Usaha', 'tipe' => 'text', 'is_wajib' => true],
+            ['nama' => 'Lokasi Usaha', 'tipe' => 'text', 'is_wajib' => true],
+            ['nama' => 'Foto KTP', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Foto Tempat Usaha', 'tipe' => 'file', 'is_wajib' => true],
+        ],
     ],
     [
         'nama'  => 'Surat Pengantar Umum',
         'konten'=> '<p>Yang bertanda tangan di bawah ini, Kepala Desa Medini, Kecamatan Undaan, Kabupaten Kudus, memberikan pengantar kepada:</p><table style="margin-left:20px;border-collapse:collapse;"><tr><td style="width:150px">Nama Lengkap</td><td style="width:12px">:</td><td><strong>[[nama]]</strong></td></tr><tr><td>NIK</td><td>:</td><td>[[nik]]</td></tr><tr><td>Alamat</td><td>:</td><td>[[alamat]]</td></tr><tr><td>Keperluan</td><td>:</td><td>[[syarat.Keperluan]]</td></tr></table><p>Mohon kiranya pihak yang berwenang dapat memberikan bantuan seperlunya kepada yang bersangkutan untuk kepentingan sebagaimana tersebut di atas.</p><p>Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</p>',
+        'syarat' => [
+            ['nama' => 'Keperluan', 'tipe' => 'textarea', 'is_wajib' => true],
+            ['nama' => 'Foto KTP', 'tipe' => 'file', 'is_wajib' => true],
+            ['nama' => 'Surat Pengantar RT/RW', 'tipe' => 'file', 'is_wajib' => true],
+        ],
     ],
 ];
 @endphp
@@ -49,6 +70,14 @@ window.__suratTemplates = @json(array_values($contohTemplates));
                 <div class="text-xs text-gray-600 bg-slate-50 rounded-lg p-3 border border-slate-100 max-h-40 overflow-y-auto font-serif leading-relaxed preview-template">
                     {!! $ct['konten'] !!}
                 </div>
+                @if(!empty($ct['syarat']))
+                <div class="mt-2.5 flex flex-wrap gap-1 items-center">
+                    <span class="text-[10px] text-gray-400 font-medium">Syarat terkait:</span>
+                    @foreach($ct['syarat'] as $s)
+                    <span class="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded border border-slate-200">{{ $s['nama'] }}</span>
+                    @endforeach
+                </div>
+                @endif
             </div>
             @endforeach
         </div>
@@ -85,20 +114,64 @@ window.__suratTemplates = @json(array_values($contohTemplates));
 </style>
 
 <script>
-// salinTemplate menggunakan index ke window.__suratTemplates (aman dari Blade parsing)
-function salinTemplate(idx) {
-    const konten = window.__suratTemplates[idx].konten;
-    if (typeof quill !== 'undefined') {
+// Fungsi salinTemplate dapat menerima index nomor (0, 1, ..) maupun string HTML
+window.salinTemplate = function(target) {
+    let item = null;
+    let konten = target;
+
+    if (typeof target === 'number' || (typeof target === 'string' && /^\d+$/.test(target.trim()))) {
+        const idx = parseInt(target, 10);
+        if (window.__suratTemplates && window.__suratTemplates[idx]) {
+            item = window.__suratTemplates[idx];
+            konten = item.konten;
+        }
+    } else if (typeof target === 'string') {
+        konten = target;
+    }
+
+    if (!konten) return;
+
+    if (typeof quill !== 'undefined' && quill) {
         quill.clipboard.dangerouslyPasteHTML(konten);
         quill.focus();
-    } else if (document.getElementById('templateKonten')) {
-        document.getElementById('templateKonten').value = konten;
     }
-    // Show toast
-    const t = document.createElement('div');
-    t.textContent = '✓ Template disalin ke editor';
-    t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-teal-700 text-white px-5 py-2.5 rounded-xl shadow-xl text-sm font-semibold z-50 pointer-events-none';
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 2200);
+
+    const textarea = document.getElementById('templateKonten');
+    if (textarea) {
+        textarea.value = (typeof quill !== 'undefined' && quill) ? quill.root.innerHTML : konten;
+    }
+
+    // Auto-fill nama layanan surat jika input masih kosong
+    if (item && item.nama) {
+        const namaInput = document.querySelector('input[name="nama_surat"]');
+        if (namaInput && !namaInput.value.trim()) {
+            namaInput.value = item.nama;
+        }
+    }
+
+    // Pre-fill syarat rekomendasi jika container syarat masih kosong
+    if (item && Array.isArray(item.syarat) && typeof window.tambahSyaratRow === 'function') {
+        const container = document.getElementById('syaratContainer');
+        if (container && container.querySelectorAll('.syarat-row').length === 0) {
+            item.syarat.forEach(s => {
+                window.tambahSyaratRow(s.nama, s.tipe, s.is_wajib ?? true);
+            });
+        }
+    }
+
+    if (typeof window.showToast === 'function') {
+        window.showToast('✓ Template disalin ke editor');
+    } else {
+        const t = document.createElement('div');
+        t.textContent = '✓ Template disalin ke editor';
+        t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-teal-700 text-white px-5 py-2.5 rounded-xl shadow-xl text-sm font-semibold z-50 pointer-events-none';
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2200);
+    }
+};
+
+// Aliaskan ke fungsi global
+function salinTemplate(target) {
+    window.salinTemplate(target);
 }
 </script>

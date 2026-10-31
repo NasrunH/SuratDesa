@@ -71,6 +71,36 @@
                     </span>
                 </div>
 
+                {{-- Table Actions Bar --}}
+                <div class="flex items-center flex-wrap gap-1.5 p-2 bg-slate-50 border border-slate-200/80 rounded-xl text-xs">
+                    <span class="text-xs font-bold text-slate-600 flex items-center gap-1.5 mr-1">
+                        <svg class="w-4 h-4 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 4h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Kelola Tabel:
+                    </span>
+                    <button type="button" onclick="tableOp('insertColumnRight')" title="Tambah kolom di sebelah kanan kursor"
+                            class="px-2.5 py-1 bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-300 text-teal-700 rounded-lg text-xs font-semibold shadow-xs transition inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Tambah Kolom
+                    </button>
+                    <button type="button" onclick="tableOp('insertRowBelow')" title="Tambah baris di bawah kursor"
+                            class="px-2.5 py-1 bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-300 text-teal-700 rounded-lg text-xs font-semibold shadow-xs transition inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Tambah Baris
+                    </button>
+                    <span class="text-slate-300">|</span>
+                    <button type="button" onclick="tableOp('deleteColumn')" title="Hapus kolom aktif"
+                            class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-600 rounded-lg text-xs font-medium shadow-xs transition">
+                        Hapus Kolom
+                    </button>
+                    <button type="button" onclick="tableOp('deleteRow')" title="Hapus baris aktif"
+                            class="px-2.5 py-1 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-600 hover:text-red-600 rounded-lg text-xs font-medium shadow-xs transition">
+                        Hapus Baris
+                    </button>
+                    <span class="ml-auto text-[11px] text-slate-400 italic">
+                        *Klik salah satu sel di dalam tabel, lalu tekan tombol di atas
+                    </span>
+                </div>
+
                 {{-- Quill Editor container --}}
                 <div id="quillEditor" style="min-height: 280px; font-size: 13px;"></div>
 
@@ -135,9 +165,9 @@
 @endsection
 
 @push('scripts')
-{{-- Quill Editor CDN --}}
-<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
-<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+{{-- Quill Editor 2.0 CDN (Dukungan penuh tabel & editing sel) --}}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <style>
     #quillEditor { border: 1px solid #e2e8f0; border-radius: 0.75rem; overflow: hidden; }
     .ql-toolbar { border: none !important; border-bottom: 1px solid #e2e8f0 !important; background: #f8fafc; }
@@ -145,22 +175,25 @@
     .ql-editor { min-height: 240px; line-height: 1.7; padding: 16px 20px; }
     .ql-editor p { margin-bottom: 8px; text-align: justify; }
     .ql-editor table { border-collapse: collapse; margin-left: 20px; margin-bottom: 10px; }
-    .ql-editor td { padding: 2px 6px; vertical-align: top; }
+    .ql-editor td { padding: 3px 8px; vertical-align: top; outline: 1px dashed #cbd5e1; }
+    .ql-editor td:focus-within { outline: 1.5px solid #0d9488; background-color: #f0fdfa; }
     /* Quill toolbar customization */
     .ql-toolbar .ql-formats { margin-right: 8px; }
 </style>
 <script>
-// Initialize Quill editor
+// Initialize Quill 2 editor dengan modul table aktif
 const quill = new Quill('#quillEditor', {
     theme: 'snow',
-    placeholder: 'Tulis isi/badan surat di sini... Gunakan tombol placeholder di atas untuk menyisipkan data otomatis seperti @{{nama}}, @{{nik}}, dsb.',
+    placeholder: 'Tulis isi/badan surat di sini... Gunakan tombol placeholder di atas untuk menyisipkan data otomatis seperti [[nama]], [[nik]], dsb.',
     modules: {
+        table: true,
         toolbar: [
             [{ 'header': [false, 1, 2, 3] }],
             ['bold', 'italic', 'underline'],
             [{ 'align': [] }],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
             [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'table': true }],
             ['clean']
         ]
     }
@@ -180,25 +213,62 @@ document.getElementById('mainForm').addEventListener('submit', function() {
 // Insert placeholder ke posisi kursor Quill
 function insertPlaceholder(ph) {
     quill.focus();
-    const range = quill.getSelection(true);
+    const range = quill.getSelection(true) || { index: quill.getLength() };
     quill.insertText(range.index, ph, 'user');
     quill.setSelection(range.index + ph.length);
 }
+window.insertPlaceholder = insertPlaceholder;
 
-// Salin dari panel kanan ke editor
-function salinTemplate(konten) {
-    quill.clipboard.dangerouslyPasteHTML(konten);
+// Table operations helper (tambah/hapus kolom & baris)
+function tableOp(action) {
     quill.focus();
-    showToast('✓ Template disalin ke editor');
-}
+    const tableMod = quill.getModule('table');
+    if (!tableMod) return;
 
-function showToast(msg) {
-    const t = document.createElement('div');
-    t.textContent = msg;
-    t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-teal-700 text-white px-5 py-2.5 rounded-xl shadow-xl text-sm font-semibold z-50 pointer-events-none';
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 2200);
+    const [table] = tableMod.getTable() || [];
+    if (!table) {
+        showToast('ℹ Klik salah satu sel di dalam tabel terlebih dahulu.');
+        return;
+    }
+
+    if (action === 'insertColumnRight') {
+        tableMod.insertColumnRight();
+        showToast('✓ Kolom berhasil ditambahkan di kanan');
+    } else if (action === 'insertColumnLeft') {
+        tableMod.insertColumnLeft();
+        showToast('✓ Kolom berhasil ditambahkan di kiri');
+    } else if (action === 'insertRowBelow') {
+        tableMod.insertRowBelow();
+        showToast('✓ Baris berhasil ditambahkan di bawah');
+    } else if (action === 'insertRowAbove') {
+        tableMod.insertRowAbove();
+        showToast('✓ Baris berhasil ditambahkan di atas');
+    } else if (action === 'deleteColumn') {
+        tableMod.deleteColumn();
+        showToast('✓ Kolom berhasil dihapus');
+    } else if (action === 'deleteRow') {
+        tableMod.deleteRow();
+        showToast('✓ Baris berhasil dihapus');
+    }
 }
+window.tableOp = tableOp;
+
+// Toast alert helper
+function showToast(msg) {
+    const existing = document.getElementById('globalToast');
+    if (existing) existing.remove();
+
+    const t = document.createElement('div');
+    t.id = 'globalToast';
+    t.textContent = msg;
+    t.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-teal-700 text-white px-5 py-2.5 rounded-xl shadow-xl text-sm font-semibold z-50 pointer-events-none transition-opacity duration-300';
+    document.body.appendChild(t);
+    setTimeout(() => {
+        t.style.opacity = '0';
+        setTimeout(() => t.remove(), 300);
+    }, 2200);
+}
+window.showToast = showToast;
 
 // Syarat rows
 let syaratCount = 0;
@@ -207,17 +277,34 @@ const emptyNote = document.getElementById('emptyNote');
 const tpl       = document.getElementById('syaratRowTemplate');
 
 function updateEmpty() {
-    emptyNote.style.display = container.querySelectorAll('.syarat-row').length === 0 ? 'block' : 'none';
+    if (emptyNote) {
+        emptyNote.style.display = container.querySelectorAll('.syarat-row').length === 0 ? 'block' : 'none';
+    }
 }
 
-document.getElementById('tambahSyarat').addEventListener('click', () => {
+function tambahSyaratRow(nama = '', tipe = 'text', wajib = true) {
     const html = tpl.innerHTML.replaceAll('__IDX__', syaratCount++);
     const div  = document.createElement('div');
     div.innerHTML = html;
     const row = div.firstElementChild;
+    if (nama) {
+        const input = row.querySelector('input[type="text"]');
+        if (input) input.value = nama;
+    }
+    if (tipe) {
+        const select = row.querySelector('select');
+        if (select) select.value = tipe;
+    }
+    const check = row.querySelector('input[type="checkbox"]');
+    if (check) check.checked = wajib;
     row.querySelector('.hapusSyarat').addEventListener('click', () => { row.remove(); updateEmpty(); });
     container.appendChild(row);
     updateEmpty();
+}
+window.tambahSyaratRow = tambahSyaratRow;
+
+document.getElementById('tambahSyarat').addEventListener('click', () => {
+    tambahSyaratRow();
 });
 </script>
 @endpush
