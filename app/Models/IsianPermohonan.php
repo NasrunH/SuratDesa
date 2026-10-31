@@ -25,6 +25,6 @@ class IsianPermohonan extends Model
 
     public function syarat()
     {
-        return $this->belongsTo(SyaratJenisSurat::class, 'id_syarat_jenis_surat');
+        return $this->belongsTo(SyaratJenisSurat::class, 'id_syarat_jenis_surat')->withTrashed();
     }
 }

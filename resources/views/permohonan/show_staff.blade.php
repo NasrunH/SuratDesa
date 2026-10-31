@@ -61,8 +61,13 @@
                 <div class="space-y-4">
                     @foreach($permohonan->isian as $isian)
                     <div class="bg-gray-50 p-4 rounded-md border border-gray-100">
-                        <p class="text-sm font-medium text-gray-700">{{ $isian->syarat->nama_syarat }}</p>
-                        @if($isian->syarat->tipe_input == 'file')
+                        <p class="text-sm font-medium text-gray-700">
+                            {{ $isian->syarat->nama_syarat ?? 'Persyaratan (Dihapus/Lama)' }}
+                            @if($isian->syarat && $isian->syarat->trashed())
+                                <span class="text-xs text-amber-600 font-normal ml-1 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">Syarat Diperbarui / Nonaktif</span>
+                            @endif
+                        </p>
+                        @if(($isian->syarat->tipe_input ?? ($isian->file_path ? 'file' : 'text')) == 'file')
                             <div class="mt-2">
                                 <a href="{{ asset('storage/' . $isian->file_path) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
                                     <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
