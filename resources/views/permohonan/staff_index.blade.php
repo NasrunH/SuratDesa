@@ -10,10 +10,11 @@
     {{-- TAB NAVIGATION --}}
     @php
         $tabs = [
-            'antrian' => ['label' => 'Perlu Diverifikasi', 'color' => 'yellow',  'count' => $counts['antrian']],
-            'selesai' => ['label' => 'Sudah Diproses',     'color' => 'emerald', 'count' => $counts['selesai']],
-            'ditolak' => ['label' => 'Ditolak',            'color' => 'red',     'count' => $counts['ditolak']],
-            'semua'   => ['label' => 'Semua',              'color' => 'slate',   'count' => $counts['semua']],
+            'antrian'      => ['label' => 'Perlu Diverifikasi', 'color' => 'yellow',  'count' => $counts['antrian']],
+            'menunggu_tte' => ['label' => 'Menunggu TTE Kades', 'color' => 'blue',    'count' => $counts['menunggu_tte']],
+            'disetujui'    => ['label' => 'Sudah Disetujui',    'color' => 'emerald', 'count' => $counts['disetujui']],
+            'ditolak'      => ['label' => 'Ditolak',            'color' => 'red',     'count' => $counts['ditolak']],
+            'semua'        => ['label' => 'Semua',              'color' => 'slate',   'count' => $counts['semua']],
         ];
     @endphp
 

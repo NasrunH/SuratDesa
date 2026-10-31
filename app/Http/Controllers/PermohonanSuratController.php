@@ -234,7 +234,7 @@ class PermohonanSuratController extends Controller
     {
         if (Auth::user()->role !== 'staff') abort(403);
 
-        $tab    = $request->get('tab', 'antrian');   // antrian | selesai | ditolak | semua
+        $tab    = $request->get('tab', 'antrian');   // antrian | menunggu_tte | disetujui | ditolak | semua
         $search = $request->get('search', '');
         $sort   = $request->get('sort', 'created_at');
         $dir    = $request->get('dir', 'desc') === 'asc' ? 'asc' : 'desc';
@@ -249,10 +249,11 @@ class PermohonanSuratController extends Controller
 
         // Filter tab
         match($tab) {
-            'antrian' => $query->whereIn('status', ['menunggu_verifikasi', 'revisi']),
-            'selesai' => $query->whereIn('status', ['menunggu_persetujuan', 'disetujui', 'selesai']),
-            'ditolak' => $query->where('status', 'ditolak'),
-            default   => null, // semua
+            'antrian'      => $query->whereIn('status', ['menunggu_verifikasi', 'revisi']),
+            'menunggu_tte' => $query->where('status', 'menunggu_persetujuan'),
+            'disetujui', 'selesai' => $query->whereIn('status', ['disetujui', 'selesai']),
+            'ditolak'      => $query->where('status', 'ditolak'),
+            default        => null, // semua
         };
 
         // Sort berdasarkan kolom yang aman
@@ -267,10 +268,11 @@ class PermohonanSuratController extends Controller
         $permohonan = $query->paginate(10)->withQueryString();
 
         $counts = [
-            'antrian' => PermohonanSurat::whereIn('status', ['menunggu_verifikasi', 'revisi'])->count(),
-            'selesai' => PermohonanSurat::whereIn('status', ['menunggu_persetujuan', 'disetujui', 'selesai'])->count(),
-            'ditolak' => PermohonanSurat::where('status', 'ditolak')->count(),
-            'semua'   => PermohonanSurat::count(),
+            'antrian'      => PermohonanSurat::whereIn('status', ['menunggu_verifikasi', 'revisi'])->count(),
+            'menunggu_tte' => PermohonanSurat::where('status', 'menunggu_persetujuan')->count(),
+            'disetujui'    => PermohonanSurat::whereIn('status', ['disetujui', 'selesai'])->count(),
+            'ditolak'      => PermohonanSurat::where('status', 'ditolak')->count(),
+            'semua'        => PermohonanSurat::count(),
         ];
 
         return view('permohonan.staff_index', compact('permohonan', 'counts', 'tab', 'search', 'sort', 'dir'));
