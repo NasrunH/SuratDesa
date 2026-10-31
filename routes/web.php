@@ -17,6 +17,18 @@ Route::get('/', function () {
 });
 Route::get('/surat/verify/{qr_code}', [SuratPublicController::class, 'verify'])->name('surat.verify');
 
+// Fallback untuk file storage publik jika symlink bermasalah di OS/server tertentu
+Route::get('/storage/{path}', function ($path) {
+    $basePath = realpath(storage_path('app/public'));
+    $filePath = realpath(storage_path('app/public/' . $path));
+
+    if (!$filePath || !str_starts_with($filePath, $basePath) || !file_exists($filePath)) {
+        abort(404);
+    }
+
+    return response()->file($filePath);
+})->where('path', '.*');
+
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login',   [AuthController::class, 'login']);
 
