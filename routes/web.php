@@ -33,6 +33,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // --- PREVIEW & DOWNLOAD SURAT (DomPDF) ---
+    Route::get('/permohonan/{id}/preview',  [PermohonanSuratController::class, 'preview'])->name('permohonan.preview');
+    Route::get('/permohonan/{id}/download', [PermohonanSuratController::class, 'download'])->name('permohonan.download');
+
     // --- WARGA ---
     Route::prefix('warga')->name('warga.')->group(function () {
         Route::get('/permohonan/create',           [PermohonanSuratController::class, 'create'])->name('permohonan.create');
@@ -41,6 +45,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/permohonan/{id}',             [PermohonanSuratController::class, 'show'])->name('permohonan.show');
         Route::get('/permohonan/{id}/edit',        [PermohonanSuratController::class, 'edit'])->name('permohonan.edit');
         Route::put('/permohonan/{id}',             [PermohonanSuratController::class, 'update'])->name('permohonan.update');
+        Route::get('/permohonan/{id}/preview',     [PermohonanSuratController::class, 'preview'])->name('permohonan.preview');
         Route::get('/permohonan/{id}/download',    [PermohonanSuratController::class, 'download'])->name('permohonan.download');
     });
 
@@ -62,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jenis-surat',                 [MasterSuratController::class, 'index'])->name('jenis_surat.index');
         Route::get('/jenis-surat/tambah',          [MasterSuratController::class, 'create'])->name('jenis_surat.create');
         Route::post('/jenis-surat',                [MasterSuratController::class, 'store'])->name('jenis_surat.store');
+        Route::post('/jenis-surat/preview-template',[MasterSuratController::class, 'previewTemplate'])->name('jenis_surat.preview_template');
         Route::get('/jenis-surat/{id}/edit',       [MasterSuratController::class, 'edit'])->name('jenis_surat.edit');
         Route::put('/jenis-surat/{id}',            [MasterSuratController::class, 'update'])->name('jenis_surat.update');
         Route::post('/jenis-surat/{id}/toggle',    [MasterSuratController::class, 'toggleStatus'])->name('jenis_surat.toggle');

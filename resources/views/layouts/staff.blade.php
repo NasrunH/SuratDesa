@@ -142,6 +142,7 @@
     </div>
 </div>
 
+@include('components.pdf_preview_modal')
 @stack('scripts')
 </body>
 </html>

@@ -145,6 +145,45 @@ class MasterSuratController extends Controller
         return back()->with('success', "Layanan <strong>{$js->nama_surat}</strong> berhasil {$label}.");
     }
 
+    /** Pratinjau draf template surat menggunakan DomPDF */
+    public function previewTemplate(Request $request)
+    {
+        $this->guardStaff();
+
+        $namaSurat = $request->input('nama_surat') ?: 'Contoh Jenis Surat';
+        $konten    = $request->input('template_konten', '');
+
+        // Mock model jenis surat
+        $jenisSurat = new JenisSurat([
+            'nama_surat'      => $namaSurat,
+            'template_konten' => $konten,
+        ]);
+
+        // Mock model penduduk (contoh data simulasi)
+        $penduduk = new \App\Models\Penduduk([
+            'nama'   => 'Ahmad Dahlan',
+            'nik'    => '3319012345670001',
+            'alamat' => 'Jl. Medini RT 02 RW 01, Kec. Undaan, Kab. Kudus',
+        ]);
+
+        // Mock model permohonan surat
+        $permohonan = new \App\Models\PermohonanSurat([
+            'nomor_surat'    => '470.1/CONTOH/DS.MDN/' . date('Y'),
+            'tanggal_terbit' => now(),
+        ]);
+        $permohonan->setRelation('jenisSurat', $jenisSurat);
+        $permohonan->setRelation('penduduk', $penduduk);
+        $permohonan->setRelation('isian', collect());
+        $permohonan->setRelation('persetujuan', collect());
+
+        $qrCode = \SimpleSoftwareIO\QrCode\Facades\QrCode::format('svg')->size(100)
+            ->generate(url('/surat/verify/preview'));
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('permohonan.pdf_template', compact('permohonan', 'qrCode'));
+
+        return $pdf->stream('Pratinjau_' . Str::slug($namaSurat) . '.pdf');
+    }
+
     /** Soft delete jenis surat */
     public function destroy($id)
     {
