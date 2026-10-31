@@ -93,6 +93,11 @@
 
 {{-- ── ISI SURAT ── --}}
 @php
+    $approver  = $permohonan->persetujuan ? $permohonan->persetujuan->where('status_persetujuan','disetujui')->first() : null;
+    $kades     = optional($approver)->kepalaDesa ?: \App\Models\KepalaDesa::with('penduduk')->where('is_aktif', true)->first();
+    $namaKades = optional(optional($kades)->penduduk)->nama ?? 'KEPALA DESA';
+    $nipKades  = optional($kades)->nip;
+
     $isianMap = [];
     foreach ($permohonan->isian as $isian) {
         if ($isian->syarat) {
@@ -107,12 +112,16 @@
         $body = str_replace('[[alamat]]',      $permohonan->penduduk->alamat, $body);
         $body = str_replace('[[nomor_surat]]', $permohonan->nomor_surat ?? '-', $body);
         $body = str_replace('[[tanggal]]',     \Carbon\Carbon::parse($permohonan->tanggal_terbit)->translatedFormat('d F Y'), $body);
+        $body = str_replace('[[nama_kades]]',  $namaKades, $body);
+        $body = str_replace('[[nip_kades]]',   $nipKades ?? '-', $body);
         // Support format lama {{nama}} juga
         $body = str_replace('{{nama}}',        $permohonan->penduduk->nama,   $body);
         $body = str_replace('{{nik}}',         $permohonan->penduduk->nik,    $body);
         $body = str_replace('{{alamat}}',      $permohonan->penduduk->alamat, $body);
         $body = str_replace('{{nomor_surat}}', $permohonan->nomor_surat ?? '-', $body);
         $body = str_replace('{{tanggal}}',     \Carbon\Carbon::parse($permohonan->tanggal_terbit)->translatedFormat('d F Y'), $body);
+        $body = str_replace('{{nama_kades}}',  $namaKades, $body);
+        $body = str_replace('{{nip_kades}}',   $nipKades ?? '-', $body);
         foreach ($isianMap as $k => $v) {
             $body = str_replace('[[syarat.'.$k.']]', $v, $body);
             $body = str_replace('{{syarat.'.$k.'}}', $v, $body);
@@ -140,10 +149,6 @@
 @endif
 
 {{-- ── TANDA TANGAN ── --}}
-@php
-    $approver  = $permohonan->persetujuan->where('status_persetujuan','disetujui')->first();
-    $namaKades = optional(optional(optional($approver)->kepalaDesa)->penduduk)->nama ?? 'KEPALA DESA';
-@endphp
 <table class="ttd-table">
     <tr>
         <td class="ttd-spacer"></td>
@@ -154,7 +159,7 @@
                 <img width="75" height="75" src="data:image/svg+xml;base64,{!! base64_encode($qrCode) !!}" alt="QR" style="display:inline-block; margin:0 auto;">
             </div>
             <div class="ttd-nama">{{ strtoupper($namaKades) }}</div>
-            <div class="ttd-nip">NIP. -</div>
+            <div class="ttd-nip">NIP. {{ $nipKades ?: '-' }}</div>
         </td>
     </tr>
 </table>

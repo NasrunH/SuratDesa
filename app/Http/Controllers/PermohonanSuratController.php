@@ -170,7 +170,7 @@ class PermohonanSuratController extends Controller
 
     public function download($id)
     {
-        $permohonan = PermohonanSurat::with(['jenisSurat', 'isian.syarat', 'penduduk'])
+        $permohonan = PermohonanSurat::with(['jenisSurat', 'isian.syarat', 'penduduk', 'persetujuan.kepalaDesa.penduduk'])
                         ->where('id_permohonan_surat', $id)
                         ->whereIn('status', ['disetujui', 'selesai'])
                         ->firstOrFail();
