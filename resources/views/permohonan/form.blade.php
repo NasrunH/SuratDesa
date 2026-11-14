@@ -25,20 +25,28 @@
             
             <div class="space-y-6">
                 @foreach($jenisSurat->syarat as $syarat)
+                    @php
+                        $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
+                    @endphp
                     <div>
-                        <label for="syarat_{{ $syarat->id_syarat_jenis_surat }}" class="block text-sm font-medium text-gray-700">
+                        <label for="{{ $inputName }}" class="block text-sm font-medium text-gray-700">
                             {{ $syarat->nama_syarat }} @if($syarat->is_wajib) <span class="text-red-500">*</span> @endif
                         </label>
                         
                         @if($syarat->tipe_input == 'file')
-                            <input type="file" name="syarat_{{ $syarat->id_syarat_jenis_surat }}" id="syarat_{{ $syarat->id_syarat_jenis_surat }}" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+                            <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 @error($inputName) border-red-500 @enderror">
+                            <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG, atau PDF (Maksimal 5 MB)</p>
                         @elseif($syarat->tipe_input == 'textarea')
-                            <textarea name="syarat_{{ $syarat->id_syarat_jenis_surat }}" id="syarat_{{ $syarat->id_syarat_jenis_surat }}" rows="3" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"></textarea>
+                            <textarea name="{{ $inputName }}" id="{{ $inputName }}" rows="3" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm @error($inputName) border-red-500 ring-1 ring-red-500 @enderror">{{ old($inputName) }}</textarea>
                         @elseif($syarat->tipe_input == 'date')
-                            <input type="date" name="syarat_{{ $syarat->id_syarat_jenis_surat }}" id="syarat_{{ $syarat->id_syarat_jenis_surat }}" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                            <input type="date" name="{{ $inputName }}" id="{{ $inputName }}" value="{{ old($inputName) }}" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm @error($inputName) border-red-500 ring-1 ring-red-500 @enderror">
                         @else
-                            <input type="{{ $syarat->tipe_input == 'number' ? 'number' : 'text' }}" name="syarat_{{ $syarat->id_syarat_jenis_surat }}" id="syarat_{{ $syarat->id_syarat_jenis_surat }}" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                            <input type="{{ $syarat->tipe_input == 'number' ? 'number' : 'text' }}" name="{{ $inputName }}" id="{{ $inputName }}" value="{{ old($inputName) }}" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm @error($inputName) border-red-500 ring-1 ring-red-500 @enderror">
                         @endif
+
+                        @error($inputName)
+                            <p class="mt-1 text-xs text-red-600 font-semibold">{{ $message }}</p>
+                        @enderror
                     </div>
                 @endforeach
             </div>

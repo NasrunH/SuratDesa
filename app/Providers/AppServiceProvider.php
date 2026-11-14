@@ -22,5 +22,9 @@ class AppServiceProvider extends ServiceProvider
         config(['app.locale' => 'id']);
         \Illuminate\Support\Carbon::setLocale('id');
         setlocale(LC_TIME, 'id_ID.utf8', 'id_ID', 'id', 'indonesian');
+
+        if (config('app.env') === 'production' || request()->header('x-forwarded-proto') === 'https') {
+            \Illuminate\Support\Facades\URL::forceScheme('https');
+        }
     }
 }

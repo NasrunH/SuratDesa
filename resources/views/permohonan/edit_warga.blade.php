@@ -89,9 +89,9 @@
                                     </div>
                                 @endif
                                 
-                                <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" 
+                                <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" 
                                     class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition duration-150">
-                                <p class="text-xs text-gray-400 font-light">Pilih file baru jika ingin mengganti berkas yang lama. Maksimal file 5MB.</p>
+                                <p class="text-xs text-gray-400 font-light">Pilih file baru jika ingin mengganti berkas yang lama. Format: JPG, PNG, PDF (Maksimal 5 MB).</p>
                             </div>
                         @elseif($syarat->tipe_input == 'textarea')
                             <textarea name="{{ $inputName }}" id="{{ $inputName }}" rows="4" 
@@ -108,6 +108,10 @@
                                 {{ ($syarat->is_wajib && !$existing) ? 'required' : '' }} 
                                 class="block w-full px-4 py-3 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-green-500 sm:text-sm transition duration-150">
                         @endif
+
+                        @error($inputName)
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                 @endforeach
             </div>

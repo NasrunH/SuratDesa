@@ -42,6 +42,35 @@ class PermohonanSuratController extends Controller
 
         $jenisSurat = JenisSurat::with('syarat')->findOrFail($request->id_jenis_surat);
 
+        $rules = [];
+        $messages = [];
+
+        foreach ($jenisSurat->syarat as $syarat) {
+            $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
+            $syaratLabel = $syarat->nama_syarat;
+
+            if ($syarat->tipe_input == 'file') {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|file|mimes:jpeg,png,jpg,pdf|max:5120';
+                $messages["{$inputName}.required"] = "Berkas {$syaratLabel} wajib diunggah.";
+                $messages["{$inputName}.file"]     = "Berkas {$syaratLabel} harus berupa file yang valid.";
+                $messages["{$inputName}.mimes"]    = "Berkas {$syaratLabel} harus berformat JPG, PNG, atau PDF.";
+                $messages["{$inputName}.max"]      = "Ukuran berkas {$syaratLabel} tidak boleh lebih dari 5 MB.";
+            } elseif ($syarat->tipe_input == 'number') {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|numeric';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi.";
+                $messages["{$inputName}.numeric"]  = "{$syaratLabel} harus berupa angka.";
+            } elseif ($syarat->tipe_input == 'date') {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|date';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi tanggal yang valid.";
+            } else {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|string|max:1000';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi.";
+                $messages["{$inputName}.max"]      = "{$syaratLabel} maksimal 1000 karakter.";
+            }
+        }
+
+        $request->validate($rules, $messages);
+
         $permohonan = PermohonanSurat::create([
             'id_permohonan_surat' => Str::uuid(),
             'id_penduduk'         => Auth::user()->id_penduduk,
@@ -113,22 +142,38 @@ class PermohonanSuratController extends Controller
         }
 
         $rules = [];
+        $messages = [];
+
         foreach ($permohonan->jenisSurat->syarat as $syarat) {
             $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
+            $syaratLabel = $syarat->nama_syarat;
             $existingIsian = $permohonan->isian->where('id_syarat_jenis_surat', $syarat->id_syarat_jenis_surat)->first();
 
             if ($syarat->tipe_input == 'file') {
                 if ($existingIsian && $existingIsian->file_path) {
-                    $rules[$inputName] = 'nullable|file|max:5120';
+                    $rules[$inputName] = 'nullable|file|mimes:jpeg,png,jpg,pdf|max:5120';
                 } else {
-                    $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|file|max:5120';
+                    $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|file|mimes:jpeg,png,jpg,pdf|max:5120';
                 }
+                $messages["{$inputName}.required"] = "Berkas {$syaratLabel} wajib diunggah.";
+                $messages["{$inputName}.file"]     = "Berkas {$syaratLabel} harus berupa file yang valid.";
+                $messages["{$inputName}.mimes"]    = "Berkas {$syaratLabel} harus berformat JPG, PNG, atau PDF.";
+                $messages["{$inputName}.max"]      = "Ukuran berkas {$syaratLabel} tidak boleh lebih dari 5 MB.";
+            } elseif ($syarat->tipe_input == 'number') {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|numeric';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi.";
+                $messages["{$inputName}.numeric"]  = "{$syaratLabel} harus berupa angka.";
+            } elseif ($syarat->tipe_input == 'date') {
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|date';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi tanggal yang valid.";
             } else {
-                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable');
+                $rules[$inputName] = ($syarat->is_wajib ? 'required' : 'nullable') . '|string|max:1000';
+                $messages["{$inputName}.required"] = "{$syaratLabel} wajib diisi.";
+                $messages["{$inputName}.max"]      = "{$syaratLabel} maksimal 1000 karakter.";
             }
         }
 
-        $request->validate($rules);
+        $request->validate($rules, $messages);
 
         foreach ($permohonan->jenisSurat->syarat as $syarat) {
             $inputName = 'syarat_' . $syarat->id_syarat_jenis_surat;
