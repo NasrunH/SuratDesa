@@ -19,7 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        config(['app.locale' => 'id']);
+        date_default_timezone_set('Asia/Jakarta');
+        config(['app.locale' => 'id', 'app.timezone' => 'Asia/Jakarta']);
         \Illuminate\Support\Carbon::setLocale('id');
         setlocale(LC_TIME, 'id_ID.utf8', 'id_ID', 'id', 'indonesian');
 
