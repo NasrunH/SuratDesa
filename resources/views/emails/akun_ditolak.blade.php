@@ -152,7 +152,18 @@
             </div>
 
             <p style="font-size: 13px; line-height: 1.5; color: #4b5563;">
-                Jika Anda merasa terdapat kekeliruan data atau membutuhkan konfirmasi lebih lanjut, Anda dapat menghubungi atau datang langsung ke Kantor Pelayanan Balai Desa Medini dengan membawa identitas diri (KTP & KK asli).
+                Jangan khawatir, Anda dapat langsung memperbaiki data pendaftaran (termasuk alamat email, identitas, maupun foto KTP) melalui tombol di bawah ini:
+            </p>
+
+            <!-- TOMBOL PERBAIKI -->
+            <div style="text-align: center; margin: 26px 0 15px 0;">
+                <a href="{{ route('register.perbaiki', $warga->id_penduduk) }}" style="display: inline-block; background-color: #d97706; color: #ffffff !important; font-weight: 600; font-size: 14px; text-decoration: none; padding: 12px 28px; border-radius: 8px; box-shadow: 0 2px 4px rgba(217, 119, 6, 0.2);" target="_blank">
+                    Perbaiki Data Pendaftaran Sekarang
+                </a>
+            </div>
+
+            <p style="font-size: 12px; line-height: 1.5; color: #6b7280; text-align: center;">
+                Setelah data diperbaiki dan dikirimkan ulang, Staff Desa akan segera memverifikasi kembali pendaftaran Anda.
             </p>
         </div>
 

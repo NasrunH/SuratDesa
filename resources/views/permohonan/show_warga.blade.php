@@ -15,10 +15,10 @@
         </div>
         
         <div class="flex flex-wrap items-center gap-2 sm:gap-3">
-            @if(in_array($permohonan->status, ['menunggu_verifikasi', 'revisi']))
+            @if(in_array($permohonan->status, ['menunggu_verifikasi', 'revisi', 'ditolak']))
                 <a href="{{ route('warga.permohonan.edit', $permohonan->id_permohonan_surat) }}" class="inline-flex items-center gap-1.5 px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-md shadow-amber-100 hover:shadow-lg transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                    Ubah Data / Perbaiki Berkas
+                    {{ $permohonan->status == 'ditolak' ? 'Perbaiki & Ajukan Ulang' : 'Ubah Data / Perbaiki Berkas' }}
                 </a>
             @endif
 
@@ -99,9 +99,12 @@
                 </h3>
                 <p class="text-sm text-red-700">{{ $permohonan->catatan_terakhir }}</p>
                 
-                @if($permohonan->status == 'revisi')
+                @if(in_array($permohonan->status, ['revisi', 'ditolak']))
                     <div class="mt-4">
-                        <a href="{{ route('warga.permohonan.edit', $permohonan->id_permohonan_surat) }}" class="bg-white text-red-700 border border-red-300 font-bold py-1.5 px-4 rounded shadow-sm text-sm hover:bg-red-150 transition">Perbaiki Berkas / Ubah Data</a>
+                        <a href="{{ route('warga.permohonan.edit', $permohonan->id_permohonan_surat) }}" class="inline-flex items-center gap-1.5 bg-white text-red-700 border border-red-300 font-bold py-1.5 px-4 rounded shadow-sm text-sm hover:bg-red-50 transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                            {{ $permohonan->status == 'ditolak' ? 'Perbaiki & Ajukan Ulang Surat' : 'Perbaiki Berkas / Ubah Data' }}
+                        </a>
                     </div>
                 @endif
             </div>

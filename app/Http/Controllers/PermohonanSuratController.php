@@ -123,7 +123,7 @@ class PermohonanSuratController extends Controller
                         ->where('id_penduduk', Auth::user()->id_penduduk)
                         ->firstOrFail();
 
-        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi'])) {
+        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi', 'ditolak'])) {
             return redirect()->route('warga.permohonan.show', $id)
                              ->with('error', 'Pengajuan yang sedang diproses atau sudah selesai tidak dapat diubah.');
         }
@@ -140,7 +140,7 @@ class PermohonanSuratController extends Controller
                         ->where('id_penduduk', Auth::user()->id_penduduk)
                         ->firstOrFail();
 
-        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi'])) {
+        if (!in_array($permohonan->status, ['menunggu_verifikasi', 'revisi', 'ditolak'])) {
             return redirect()->route('warga.permohonan.show', $id)
                              ->with('error', 'Pengajuan yang sedang diproses atau sudah selesai tidak dapat diubah.');
         }

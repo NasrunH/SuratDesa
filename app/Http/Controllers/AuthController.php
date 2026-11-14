@@ -232,7 +232,6 @@ class AuthController extends Controller
                          ->with('nama', $warga->nama)
                          ->with('success', 'Data pendaftaran dan email Anda berhasil diperbarui. Pengajuan Anda telah dikirim ulang ke Staff Desa untuk diverifikasi.');
     }
-    }
 
     public function logout(Request $request)
     {

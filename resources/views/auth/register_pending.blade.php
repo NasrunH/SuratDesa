@@ -22,6 +22,11 @@
 
         <!-- Pesan Utama -->
         <div>
+            @if(session('success'))
+                <div class="bg-green-50 border border-green-200 rounded-2xl p-4 mb-4 text-sm text-green-800 text-left">
+                    <p class="font-semibold">{{ session('success') }}</p>
+                </div>
+            @endif
             <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Pendaftaran Terkirim!</h1>
             <p class="mt-3 text-gray-600 text-lg font-light leading-relaxed">
                 @if(session('nama'))
