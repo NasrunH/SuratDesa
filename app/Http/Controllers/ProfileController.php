@@ -15,15 +15,32 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        if ($user) {
-            $user->load(['staffDesa', 'kepalaDesa']);
+        if (!$user) {
+            return redirect()->route('login');
         }
 
-        $totalPengajuan = $user ? $user->permohonanSurat()->count() : 0;
-        $pengajuanTerakhir = $user ? $user->permohonanSurat()->with('jenisSurat')->latest('created_at')->first() : null;
+        try {
+            $user->load(['staffDesa', 'kepalaDesa']);
+        } catch (\Throwable $e) {
+            // Lanjutkan jika ada relasi opsional yang belum siap
+        }
+
+        $totalPengajuan = 0;
+        try {
+            $totalPengajuan = $user->permohonanSurat()->count();
+        } catch (\Throwable $e) {
+            $totalPengajuan = 0;
+        }
+
+        $pengajuanTerakhir = null;
+        try {
+            $pengajuanTerakhir = $user->permohonanSurat()->with('jenisSurat')->latest('created_at')->first();
+        } catch (\Throwable $e) {
+            $pengajuanTerakhir = null;
+        }
 
         // Tentukan layout berdasarkan peran pengguna
-        $layout = ($user && $user->role === 'staff') ? 'layouts.staff' : 'layouts.app';
+        $layout = ($user->role === 'staff') ? 'layouts.staff' : 'layouts.app';
 
         return view('profile.show', compact('user', 'totalPengajuan', 'pengajuanTerakhir', 'layout'));
     }

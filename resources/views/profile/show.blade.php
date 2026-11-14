@@ -14,7 +14,17 @@
         </a>
 
         <div class="text-xs text-gray-500 hidden sm:block">
-            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->translatedFormat('d F Y') : '-' }}</span>
+            @php
+                $tglDaftar = '-';
+                if ($user->created_at) {
+                    try {
+                        $tglDaftar = \Carbon\Carbon::parse($user->created_at)->translatedFormat('d F Y');
+                    } catch (\Throwable $e) {
+                        $tglDaftar = '-';
+                    }
+                }
+            @endphp
+            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $tglDaftar }}</span>
         </div>
     </div>
 
@@ -26,7 +36,7 @@
         </div>
     @endif
 
-    @if($errors->any())
+    @if(isset($errors) && $errors->any())
         <div class="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex items-start gap-3 shadow-sm animate-fade-in">
             <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <div class="text-sm font-medium">
@@ -196,7 +206,7 @@
 
                     @if($user->foto_ktp)
                         <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200 flex flex-col sm:flex-row items-center gap-4">
-                            <div class="w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black/5 border border-gray-300 shrink-0 cursor-pointer group relative" onclick="previewDocument('{{ asset('storage/' . $user->foto_ktp) }}', 'Foto KTP - {{ $user->nama }}')" title="Klik untuk pratinjau">
+                            <div class="w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black/5 border border-gray-300 shrink-0 cursor-pointer group relative" onclick="previewDocument('{{ asset('storage/' . $user->foto_ktp) }}', 'Foto KTP - {{ addslashes($user->nama) }}')" title="Klik untuk pratinjau">
                                 <img src="{{ asset('storage/' . $user->foto_ktp) }}" alt="Foto KTP {{ $user->nama }}" class="w-full h-full object-cover group-hover:scale-105 transition">
                                 <div class="absolute inset-0 bg-slate-900/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition text-white text-xs font-bold gap-1">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
@@ -206,7 +216,7 @@
                             <div class="space-y-1.5 text-center sm:text-left">
                                 <p class="text-xs font-bold text-gray-800">Foto KTP Warga Resmi</p>
                                 <p class="text-xs text-gray-500">Digunakan oleh Staff Desa untuk validasi berkas administrasi.</p>
-                                <button type="button" onclick="previewDocument('{{ asset('storage/' . $user->foto_ktp) }}', 'Foto KTP - {{ $user->nama }}')" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition cursor-pointer">
+                                <button type="button" onclick="previewDocument('{{ asset('storage/' . $user->foto_ktp) }}', 'Foto KTP - {{ addslashes($user->nama) }}')" class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition cursor-pointer">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                     Pratinjau Foto KTP
                                 </button>
