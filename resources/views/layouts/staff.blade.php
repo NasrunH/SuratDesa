@@ -45,7 +45,7 @@
                 <div class="min-w-0">
                     <div class="text-sm font-bold truncate group-hover:text-teal-200 transition">{{ Auth::user()->nama }}</div>
                     <div class="text-teal-300 text-xs flex items-center gap-1">
-                        {{ Auth::user()->staffDesa->jabatan ?? 'Staff Desa' }}
+                        {{ Auth::user()->staffDesa?->jabatan ?? 'Staff Desa' }}
                         <svg class="w-3 h-3 text-teal-400 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </div>
                 </div>
@@ -151,7 +151,7 @@
                             <p class="text-[11px] text-gray-400">Masuk sebagai</p>
                             <p class="text-sm font-bold text-gray-900 truncate mt-0.5">{{ Auth::user()->nama }}</p>
                             <span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-teal-100 text-teal-800 mt-1">
-                                {{ Auth::user()->staffDesa->jabatan ?? 'Staff Desa' }}
+                                {{ Auth::user()->staffDesa?->jabatan ?? 'Staff Desa' }}
                             </span>
                         </div>
                         <div class="py-1">

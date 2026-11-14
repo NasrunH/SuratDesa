@@ -15,19 +15,22 @@ class ProfileController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $user->load(['staffDesa', 'kepalaDesa']);
+        if ($user) {
+            $user->load(['staffDesa', 'kepalaDesa']);
+        }
 
-        $totalPengajuan = $user->permohonanSurat()->count();
-        $pengajuanTerakhir = $user->permohonanSurat()->with('jenisSurat')->latest('created_at')->first();
+        $totalPengajuan = $user ? $user->permohonanSurat()->count() : 0;
+        $pengajuanTerakhir = $user ? $user->permohonanSurat()->with('jenisSurat')->latest('created_at')->first() : null;
 
         // Tentukan layout berdasarkan peran pengguna
-        $layout = $user->role === 'staff' ? 'layouts.staff' : 'layouts.app';
+        $layout = ($user && $user->role === 'staff') ? 'layouts.staff' : 'layouts.app';
 
         return view('profile.show', compact('user', 'totalPengajuan', 'pengajuanTerakhir', 'layout'));
     }
 
     /**
-     * Perbarui data kontak dan domisili pengguna.
+     * Perbarui data kontak pengguna (Email & No HP).
+     * Alamat domisili terkunci sesuai data kependudukan resmi.
      */
     public function updateProfile(Request $request)
     {
@@ -36,22 +39,18 @@ class ProfileController extends Controller
         $request->validate([
             'email'   => 'required|email|max:100|unique:penduduk,email,' . $user->id_penduduk . ',id_penduduk',
             'no_hp'   => 'required|string|max:20',
-            'alamat'  => 'required|string|max:500',
         ], [
             'email.required'  => 'Alamat email wajib diisi.',
             'email.email'     => 'Format alamat email tidak valid.',
             'email.unique'    => 'Email ini sudah digunakan oleh akun lain.',
             'no_hp.required'  => 'Nomor HP / WhatsApp wajib diisi.',
-            'alamat.required' => 'Alamat domisili wajib diisi.',
-            'alamat.max'      => 'Alamat maksimal 500 karakter.',
         ]);
 
-        $user->email  = $request->email;
-        $user->no_hp  = $request->no_hp;
-        $user->alamat = $request->alamat;
+        $user->email = $request->email;
+        $user->no_hp = $request->no_hp;
         $user->save();
 
-        return back()->with('success', 'Data kontak dan domisili Anda berhasil diperbarui.');
+        return back()->with('success', 'Data kontak (Email & Nomor HP) berhasil diperbarui.');
     }
 
     /**

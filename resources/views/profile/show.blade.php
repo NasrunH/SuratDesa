@@ -14,7 +14,7 @@
         </a>
 
         <div class="text-xs text-gray-500 hidden sm:block">
-            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $user->created_at ? $user->created_at->translatedFormat('d F Y') : '-' }}</span>
+            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->translatedFormat('d F Y') : '-' }}</span>
         </div>
     </div>
 
@@ -118,7 +118,7 @@
                             <div class="flex items-center justify-between">
                                 <span class="text-gray-500">Periode Jabatan:</span>
                                 <span class="font-semibold text-gray-800">
-                                    {{ $user->kepalaDesa->periode_mulai ?? '-' }} s/d {{ $user->kepalaDesa->periode_selesai ?? 'Sekarang' }}
+                                    {{ $user->kepalaDesa->periode_jabatan ?? '-' }}
                                 </span>
                             </div>
                         @endif
@@ -175,6 +175,16 @@
                         <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Nama Lengkap (Sesuai KTP)</span>
                         <p class="text-sm sm:text-base font-bold text-gray-900 mt-1">{{ $user->nama }}</p>
                     </div>
+
+                    <!-- Alamat Domisili Resmi (Terkunci) -->
+                    <div class="sm:col-span-2 bg-gray-50/80 rounded-2xl p-4 border border-gray-200">
+                        <div class="flex items-center justify-between mb-1">
+                            <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Alamat Domisili Resmi (RT/RW)</span>
+                            <span class="text-[10px] font-semibold bg-gray-200/80 text-gray-600 px-2 py-0.5 rounded-full">Sesuai KTP / KK</span>
+                        </div>
+                        <p class="text-sm sm:text-base font-semibold text-gray-900 leading-relaxed">{{ $user->alamat ?: 'Desa Medini, Kec. Undaan, Kab. Kudus' }}</p>
+                        <p class="text-[11px] text-gray-400 mt-1 italic">*Alamat domisili dicatat permanen sesuai data administrasi kependudukan desa dan tidak dapat diubah mandiri.</p>
+                    </div>
                 </div>
 
                 <!-- Foto KTP Section -->
@@ -206,14 +216,14 @@
                 </div>
             </div>
 
-            <!-- 2. FORM UBAH KONTAK & DOMISILI -->
+            <!-- 2. FORM UBAH KONTAK PRIBADI -->
             <div class="bg-white rounded-3xl border border-gray-150 shadow-sm p-6 sm:p-8 space-y-6">
                 <div>
                     <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
                         <span class="w-2.5 h-6 bg-blue-500 rounded-full"></span>
-                        Ubah Kontak & Domisili
+                        Ubah Kontak Pribadi
                     </h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbarui alamat email, nomor telepon, dan domisili Anda agar pemberitahuan surat tersampaikan dengan lancar.</p>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbarui alamat email dan nomor WhatsApp Anda agar notifikasi permohonan surat tersampaikan secara cepat.</p>
                 </div>
 
                 <form action="{{ route('profil.update') }}" method="POST" class="space-y-5">
@@ -242,16 +252,6 @@
                                    placeholder="Contoh: 08123456789">
                             <p class="text-[11px] text-gray-400 mt-1">Gunakan nomor aktif yang terhubung dengan WhatsApp.</p>
                         </div>
-                    </div>
-
-                    <!-- Alamat Domisili -->
-                    <div>
-                        <label for="alamat" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                            Alamat Domisili Lengkap (RT/RW) <span class="text-red-500">*</span>
-                        </label>
-                        <textarea id="alamat" name="alamat" rows="3" required
-                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition shadow-sm leading-relaxed"
-                                  placeholder="Contoh: RT 02 / RW 01, Desa Medini, Kecamatan Undaan">{{ old('alamat', $user->alamat) }}</textarea>
                     </div>
 
                     <div class="flex justify-end pt-2">
