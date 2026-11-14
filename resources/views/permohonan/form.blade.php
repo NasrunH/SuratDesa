@@ -34,7 +34,13 @@
                         </label>
                         
                         @if($syarat->tipe_input == 'file')
-                            <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 @error($inputName) border-red-500 @enderror">
+                            <div class="mt-1 flex flex-col sm:flex-row sm:items-center gap-2">
+                                <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" {{ $syarat->is_wajib ? 'required' : '' }} onchange="const b = document.getElementById('btn_{{ $inputName }}'); if(this.files && this.files[0]) { b.classList.remove('hidden'); } else { b.classList.add('hidden'); }" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 @error($inputName) border-red-500 @enderror">
+                                <button type="button" id="btn_{{ $inputName }}" onclick="previewLocalFile(document.getElementById('{{ $inputName }}'), '{{ $syarat->nama_syarat }}')" class="hidden shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-bold rounded-lg border border-green-200 transition shadow-sm cursor-pointer">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    Pratinjau File Terpilih
+                                </button>
+                            </div>
                             <p class="text-xs text-gray-400 mt-1">Format: JPG, PNG, atau PDF (Maksimal 5 MB)</p>
                         @elseif($syarat->tipe_input == 'textarea')
                             <textarea name="{{ $inputName }}" id="{{ $inputName }}" rows="3" {{ $syarat->is_wajib ? 'required' : '' }} class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm @error($inputName) border-red-500 ring-1 ring-red-500 @enderror">{{ old($inputName) }}</textarea>

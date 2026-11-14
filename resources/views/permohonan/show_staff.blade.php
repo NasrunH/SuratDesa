@@ -56,10 +56,10 @@
                     <div class="mt-4">
                         <dt class="text-gray-500 mb-2">Foto KTP Warga</dt>
                         <dd>
-                            <a href="{{ asset('storage/' . $permohonan->penduduk->foto_ktp) }}" target="_blank" class="text-blue-600 hover:text-blue-800 underline flex items-center">
-                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                Lihat KTP
-                            </a>
+                            <button type="button" onclick="previewDocument('{{ asset('storage/' . $permohonan->penduduk->foto_ktp) }}', 'Foto KTP - {{ $permohonan->penduduk->nama }}')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition shadow-sm cursor-pointer">
+                                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                Pratinjau KTP
+                            </button>
                         </dd>
                     </div>
                     @endif
@@ -82,10 +82,10 @@
                         </p>
                         @if(($isian->syarat->tipe_input ?? ($isian->file_path ? 'file' : 'text')) == 'file')
                             <div class="mt-2">
-                                <a href="{{ asset('storage/' . $isian->file_path) }}" target="_blank" class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200">
-                                    <svg class="mr-1.5 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>
-                                    Lihat Dokumen Terlampir
-                                </a>
+                                <button type="button" onclick="previewDocument('{{ asset('storage/' . $isian->file_path) }}', '{{ $isian->syarat->nama_syarat ?? 'Berkas Lampiran' }}')" class="inline-flex items-center gap-2 px-3.5 py-1.5 border border-green-200 text-xs font-bold rounded-lg text-green-800 bg-green-50 hover:bg-green-100 hover:border-green-300 transition shadow-sm cursor-pointer">
+                                    <svg class="h-4 w-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    Pratinjau Dokumen Lampiran
+                                </button>
                             </div>
                         @else
                             <p class="mt-1 text-sm text-gray-900 bg-white p-2 border border-gray-200 rounded">{{ $isian->nilai_teks }}</p>

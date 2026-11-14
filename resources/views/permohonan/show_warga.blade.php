@@ -89,6 +89,27 @@
                     </div>
                     @endif
                 </dl>
+
+                @if($permohonan->isian && $permohonan->isian->count() > 0)
+                <div class="mt-6 pt-5 border-t border-gray-200">
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Berkas Persyaratan Diunggah</h4>
+                    <div class="space-y-2">
+                        @foreach($permohonan->isian as $isian)
+                            <div class="flex items-center justify-between text-xs bg-gray-50 p-2.5 rounded-xl border border-gray-200">
+                                <span class="font-medium text-gray-700 truncate pr-2">{{ $isian->syarat->nama_syarat ?? 'Persyaratan' }}</span>
+                                @if($isian->file_path)
+                                    <button type="button" onclick="previewDocument('{{ asset('storage/' . $isian->file_path) }}', '{{ $isian->syarat->nama_syarat ?? 'Berkas Lampiran' }}')" class="shrink-0 text-emerald-700 hover:text-emerald-900 font-bold flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 border border-emerald-200 hover:bg-emerald-100 transition shadow-sm cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Pratinjau
+                                    </button>
+                                @else
+                                    <span class="text-gray-600 font-semibold truncate">{{ $isian->nilai_teks }}</span>
+                                @endif
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
             </div>
             
             @if($permohonan->catatan_terakhir)

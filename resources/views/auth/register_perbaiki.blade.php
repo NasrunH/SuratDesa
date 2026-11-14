@@ -97,12 +97,18 @@
                     </label>
                     
                     @if($warga->foto_ktp)
-                        <div class="mb-3 flex items-center gap-4 p-3 bg-gray-50 border border-gray-200 rounded-xl">
-                            <img src="{{ asset('storage/' . $warga->foto_ktp) }}" alt="Foto KTP Sebelumnya" class="w-16 h-12 object-cover rounded-lg border">
-                            <div class="text-xs text-gray-600">
-                                <span class="font-semibold block text-gray-800">Foto KTP saat ini sudah ada</span>
-                                Pilih file gambar di bawah jika Anda ingin menggantinya dengan foto yang lebih jelas.
+                        <div class="mb-3 flex items-center justify-between gap-4 p-3 bg-gray-50 border border-gray-200 rounded-xl">
+                            <div class="flex items-center gap-3">
+                                <img src="{{ asset('storage/' . $warga->foto_ktp) }}" alt="Foto KTP Sebelumnya" class="w-16 h-12 object-cover rounded-lg border cursor-pointer hover:opacity-80 transition" onclick="previewDocument('{{ asset('storage/' . $warga->foto_ktp) }}', 'Foto KTP Sebelumnya')" title="Klik untuk pratinjau">
+                                <div class="text-xs text-gray-600">
+                                    <span class="font-semibold block text-gray-800">Foto KTP saat ini sudah ada</span>
+                                    Pilih file gambar di bawah jika Anda ingin menggantinya.
+                                </div>
                             </div>
+                            <button type="button" onclick="previewDocument('{{ asset('storage/' . $warga->foto_ktp) }}', 'Foto KTP Sebelumnya')" class="shrink-0 px-3 py-1.5 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs font-bold rounded-lg transition shadow-sm cursor-pointer flex items-center gap-1.5">
+                                <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Pratinjau
+                            </button>
                         </div>
                     @endif
 

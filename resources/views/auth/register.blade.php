@@ -95,6 +95,12 @@
                                 </label>
                             </div>
                             <p id="ktp-filename" class="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB (Wajib diunggah)</p>
+                            <div id="ktp-preview-wrapper" class="hidden mt-2">
+                                <button type="button" onclick="previewLocalFile(document.getElementById('foto_ktp'), 'Foto KTP Fisik')" class="inline-flex items-center gap-1.5 px-3 py-1 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-bold rounded-lg border border-green-200 transition shadow-sm cursor-pointer">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    Pratinjau Foto KTP
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,16 +138,19 @@
 
     function updateKtpLabel(input) {
         const label = document.getElementById('ktp-filename');
+        const pw = document.getElementById('ktp-preview-wrapper');
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const sizeMb = (file.size / 1024 / 1024).toFixed(2);
             label.textContent = 'File dipilih: ' + file.name + ' (' + sizeMb + ' MB)';
             label.classList.remove('text-gray-500');
             label.classList.add('text-green-600', 'font-semibold');
+            if (pw) pw.classList.remove('hidden');
         } else {
             label.textContent = 'PNG, JPG up to 2MB (Wajib diunggah)';
             label.classList.remove('text-green-600', 'font-semibold');
             label.classList.add('text-gray-500');
+            if (pw) pw.classList.add('hidden');
         }
     }
 </script>

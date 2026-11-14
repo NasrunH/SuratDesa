@@ -71,10 +71,10 @@
                             <div class="flex items-center justify-between text-xs bg-gray-50 p-2 rounded border border-gray-100">
                                 <span class="font-medium text-gray-700">{{ $isian->syarat->nama_syarat ?? 'Persyaratan' }}</span>
                                 @if($isian->file_path)
-                                <a href="{{ asset('storage/' . $isian->file_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-semibold flex items-center gap-1">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                                    Lihat Lampiran
-                                </a>
+                                <button type="button" onclick="previewDocument('{{ asset('storage/' . $isian->file_path) }}', '{{ $isian->syarat->nama_syarat ?? 'Berkas Lampiran' }}')" class="text-blue-600 hover:text-blue-800 font-bold flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 hover:bg-blue-100 transition shadow-sm cursor-pointer">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    Pratinjau Berkas
+                                </button>
                                 @else
                                 <span class="text-gray-600">{{ $isian->nilai_teks }}</span>
                                 @endif

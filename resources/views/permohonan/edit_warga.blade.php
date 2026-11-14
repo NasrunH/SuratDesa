@@ -80,17 +80,27 @@
                         @if($syarat->tipe_input == 'file')
                             <div class="space-y-3">
                                 @if($existing && $existing->file_path)
-                                    <div class="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-2xl text-sm text-green-800">
-                                        <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                                        <div class="truncate">
-                                            <span class="font-medium">Berkas saat ini:</span> 
-                                            <a href="{{ asset('storage/' . $existing->file_path) }}" target="_blank" class="underline text-green-700 hover:text-green-900 font-semibold transition">Lihat Berkas Lama</a>
+                                    <div class="flex items-center justify-between gap-3 p-3 bg-green-50 border border-green-200 rounded-2xl text-sm text-green-800">
+                                        <div class="flex items-center gap-2 truncate">
+                                            <svg class="w-5 h-5 text-green-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                                            <span class="font-medium truncate">Berkas saat ini terunggah</span>
                                         </div>
+                                        <button type="button" onclick="previewDocument('{{ asset('storage/' . $existing->file_path) }}', '{{ $syarat->nama_syarat }}')" class="shrink-0 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-bold rounded-xl transition shadow-sm cursor-pointer flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            Pratinjau Berkas
+                                        </button>
                                     </div>
                                 @endif
                                 
-                                <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" 
-                                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition duration-150">
+                                <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                                    <input type="file" name="{{ $inputName }}" id="{{ $inputName }}" accept=".jpg,.jpeg,.png,.pdf" 
+                                        onchange="const b = document.getElementById('btn_{{ $inputName }}'); if(this.files && this.files[0]) { b.classList.remove('hidden'); } else { b.classList.add('hidden'); }"
+                                        class="block w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 transition duration-150">
+                                    <button type="button" id="btn_{{ $inputName }}" onclick="previewLocalFile(document.getElementById('{{ $inputName }}'), '{{ $syarat->nama_syarat }}')" class="hidden shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 text-xs font-bold rounded-xl border border-green-200 transition shadow-sm cursor-pointer">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Pratinjau File Baru
+                                    </button>
+                                </div>
                                 <p class="text-xs text-gray-400 font-light">Pilih file baru jika ingin mengganti berkas yang lama. Format: JPG, PNG, PDF (Maksimal 5 MB).</p>
                             </div>
                         @elseif($syarat->tipe_input == 'textarea')
