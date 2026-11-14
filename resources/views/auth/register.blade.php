@@ -67,8 +67,8 @@
                         </div>
                     </div>
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5">Alamat Email <span class="text-gray-400 font-normal">(Opsional)</span></label>
-                        <input id="email" name="email" type="email" value="{{ old('email') }}" class="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all sm:text-sm shadow-sm" placeholder="email@contoh.com">
+                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5">Alamat Email <span class="text-red-500">*</span></label>
+                        <input id="email" name="email" type="email" value="{{ old('email') }}" required class="appearance-none block w-full px-4 py-3 border border-gray-200 rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-green-500/50 focus:border-green-500 transition-all sm:text-sm shadow-sm" placeholder="email@contoh.com">
                     </div>
                     <div>
                         <label for="no_hp" class="block text-sm font-semibold text-gray-700 mb-1.5">No. HP / WhatsApp <span class="text-red-500">*</span></label>
@@ -82,7 +82,7 @@
                 </div>
                 
                 <div>
-                    <label for="foto_ktp" class="block text-sm font-semibold text-gray-700 mb-1.5">Foto KTP Fisik <span class="text-gray-400 font-normal">(Opsional, disarankan)</span></label>
+                    <label for="foto_ktp" class="block text-sm font-semibold text-gray-700 mb-1.5">Foto KTP Fisik <span class="text-red-500">*</span></label>
                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-xl bg-white/50 hover:bg-white/80 transition-colors">
                         <div class="space-y-1 text-center">
                             <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
@@ -90,11 +90,11 @@
                             </svg>
                             <div class="flex text-sm text-gray-600 justify-center mt-2">
                                 <label for="foto_ktp" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500 px-2 py-0.5">
-                                    <span>Pilih file gambar</span>
-                                    <input id="foto_ktp" name="foto_ktp" type="file" class="sr-only" accept="image/*">
+                                    <span>Pilih file gambar KTP</span>
+                                    <input id="foto_ktp" name="foto_ktp" type="file" required class="sr-only" accept="image/jpeg,image/png,image/jpg" onchange="updateKtpLabel(this)">
                                 </label>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB</p>
+                            <p id="ktp-filename" class="text-xs text-gray-500 mt-1">PNG, JPG up to 2MB (Wajib diunggah)</p>
                         </div>
                     </div>
                 </div>
@@ -127,6 +127,21 @@
             input.type = 'password';
             eyeOpen.classList.add('hidden');
             eyeClosed.classList.remove('hidden');
+        }
+    }
+
+    function updateKtpLabel(input) {
+        const label = document.getElementById('ktp-filename');
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            const sizeMb = (file.size / 1024 / 1024).toFixed(2);
+            label.textContent = 'File dipilih: ' + file.name + ' (' + sizeMb + ' MB)';
+            label.classList.remove('text-gray-500');
+            label.classList.add('text-green-600', 'font-semibold');
+        } else {
+            label.textContent = 'PNG, JPG up to 2MB (Wajib diunggah)';
+            label.classList.remove('text-green-600', 'font-semibold');
+            label.classList.add('text-gray-500');
         }
     }
 </script>

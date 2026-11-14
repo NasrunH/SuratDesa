@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Models\Penduduk;
+use App\Mail\AkunDiverifikasiMail;
+use App\Mail\AkunDitolakMail;
 
 class AkunController extends Controller
 {
@@ -69,8 +73,23 @@ class AkunController extends Controller
             'catatan_penolakan'  => null,
         ]);
 
+        $emailSent = false;
+        if (!empty($warga->email)) {
+            try {
+                Mail::to($warga->email)->send(new AkunDiverifikasiMail($warga));
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                Log::error('Gagal mengirim email aktivasi akun: ' . $e->getMessage());
+            }
+        }
+
+        $pesan = "Akun warga atas nama <strong>{$warga->nama}</strong> berhasil diaktifkan. Warga sudah bisa login ke sistem.";
+        if ($emailSent) {
+            $pesan .= " Notifikasi email berhasil dikirim ke {$warga->email}.";
+        }
+
         return redirect()->route('staff.akun.index')
-                         ->with('success', "Akun warga atas nama <strong>{$warga->nama}</strong> berhasil diaktifkan. Warga sudah bisa login ke sistem.");
+                         ->with('success', $pesan);
     }
 
     /**
@@ -94,8 +113,23 @@ class AkunController extends Controller
             'catatan_penolakan' => $request->catatan_penolakan,
         ]);
 
+        $emailSent = false;
+        if (!empty($warga->email)) {
+            try {
+                Mail::to($warga->email)->send(new AkunDitolakMail($warga, $request->catatan_penolakan));
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                Log::error('Gagal mengirim email penolakan akun: ' . $e->getMessage());
+            }
+        }
+
+        $pesan = "Akun warga atas nama <strong>{$warga->nama}</strong> telah ditolak dengan catatan.";
+        if ($emailSent) {
+            $pesan .= " Notifikasi email berhasil dikirim ke {$warga->email}.";
+        }
+
         return redirect()->route('staff.akun.index')
-                         ->with('success', "Akun warga atas nama <strong>{$warga->nama}</strong> telah ditolak dengan catatan.");
+                         ->with('success', $pesan);
     }
 
     /**
@@ -112,7 +146,22 @@ class AkunController extends Controller
             'catatan_penolakan' => null,
         ]);
 
+        $emailSent = false;
+        if (!empty($warga->email)) {
+            try {
+                Mail::to($warga->email)->send(new AkunDiverifikasiMail($warga));
+                $emailSent = true;
+            } catch (\Throwable $e) {
+                Log::error('Gagal mengirim email reaktivasi akun: ' . $e->getMessage());
+            }
+        }
+
+        $pesan = "Akun warga atas nama <strong>{$warga->nama}</strong> telah diaktifkan kembali.";
+        if ($emailSent) {
+            $pesan .= " Notifikasi email berhasil dikirim ke {$warga->email}.";
+        }
+
         return redirect()->route('staff.akun.index')
-                         ->with('success', "Akun warga atas nama <strong>{$warga->nama}</strong> telah diaktifkan kembali.");
+                         ->with('success', $pesan);
     }
 }

@@ -14,6 +14,10 @@ use App\Models\Persetujuan;
 use App\Models\Penduduk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use App\Mail\SuratDisetujuiMail;
+use App\Mail\SuratDitolakMail;
 
 class PermohonanSuratController extends Controller
 {
@@ -362,8 +366,27 @@ class PermohonanSuratController extends Controller
         $permohonan->catatan_terakhir = $request->catatan;
         $permohonan->save();
 
+        // Kirim email notifikasi jika surat ditolak oleh staff
+        $emailSent = false;
+        if ($request->status_verifikasi === 'ditolak') {
+            $permohonan->loadMissing(['jenisSurat', 'penduduk']);
+            if ($permohonan->penduduk && !empty($permohonan->penduduk->email)) {
+                try {
+                    Mail::to($permohonan->penduduk->email)->send(new SuratDitolakMail($permohonan, $request->catatan, 'Staff Desa'));
+                    $emailSent = true;
+                } catch (\Throwable $e) {
+                    Log::error('Gagal mengirim email penolakan surat (staff): ' . $e->getMessage());
+                }
+            }
+        }
+
+        $pesan = 'Verifikasi berhasil disimpan.';
+        if ($emailSent) {
+            $pesan .= ' Notifikasi email penolakan telah dikirim ke ' . $permohonan->penduduk->email . '.';
+        }
+
         return redirect()->route('staff.permohonan.index')
-                         ->with('success', 'Verifikasi berhasil disimpan.');
+                         ->with('success', $pesan);
     }
 
 
@@ -460,14 +483,54 @@ class PermohonanSuratController extends Controller
             $permohonan->status         = 'disetujui';
             $permohonan->qr_code        = Str::uuid();
             $permohonan->tanggal_terbit = now();
+            $permohonan->save();
+
+            // Kirim notifikasi email ke warga pemohon
+            $emailNotifSent = false;
+            $permohonan->loadMissing(['jenisSurat', 'penduduk', 'isian.syarat', 'persetujuan.kepalaDesa.penduduk']);
+
+            if ($permohonan->penduduk && !empty($permohonan->penduduk->email)) {
+                try {
+                    Mail::to($permohonan->penduduk->email)->send(new SuratDisetujuiMail($permohonan));
+                    $emailNotifSent = true;
+                } catch (\Throwable $e) {
+                    Log::error('Gagal mengirim notifikasi email surat disetujui: ' . $e->getMessage());
+                }
+            }
+
+            $pesan = 'Persetujuan berhasil diproses.';
+            if ($emailNotifSent) {
+                $pesan .= ' Notifikasi email berhasil dikirim ke ' . $permohonan->penduduk->email . '.';
+            } elseif ($permohonan->penduduk && empty($permohonan->penduduk->email)) {
+                $pesan .= ' (Pemohon tidak memiliki email terdaftar sehingga notifikasi email dilewati).';
+            }
+
+            return redirect()->route('kades.permohonan.index')
+                             ->with('success', $pesan);
         } else {
             $permohonan->status           = 'ditolak';
             $permohonan->catatan_terakhir = $request->catatan;
+            $permohonan->save();
+
+            // Kirim email notifikasi penolakan dari Kades
+            $emailSent = false;
+            $permohonan->loadMissing(['jenisSurat', 'penduduk']);
+            if ($permohonan->penduduk && !empty($permohonan->penduduk->email)) {
+                try {
+                    Mail::to($permohonan->penduduk->email)->send(new SuratDitolakMail($permohonan, $request->catatan, 'Kepala Desa'));
+                    $emailSent = true;
+                } catch (\Throwable $e) {
+                    Log::error('Gagal mengirim email penolakan surat (kades): ' . $e->getMessage());
+                }
+            }
+
+            $pesan = 'Persetujuan berhasil diproses (surat ditolak).';
+            if ($emailSent) {
+                $pesan .= ' Notifikasi email penolakan telah dikirim ke ' . $permohonan->penduduk->email . '.';
+            }
+
+            return redirect()->route('kades.permohonan.index')
+                             ->with('success', $pesan);
         }
-
-        $permohonan->save();
-
-        return redirect()->route('kades.permohonan.index')
-                         ->with('success', 'Persetujuan berhasil diproses.');
     }
 }
