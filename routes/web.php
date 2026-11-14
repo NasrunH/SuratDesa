@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profil',    [ProfileController::class, 'show'])->name('profil');
+    Route::put('/profil',    [ProfileController::class, 'updateProfile'])->name('profil.update');
+    Route::put('/profil/password', [ProfileController::class, 'updatePassword'])->name('profil.password');
 
     // --- PREVIEW & DOWNLOAD SURAT (DomPDF) ---
     Route::get('/permohonan/{id}/preview',  [PermohonanSuratController::class, 'preview'])->name('permohonan.preview');

@@ -18,6 +18,28 @@
         </div>
     </div>
 
+    {{-- ALERT NOTIFIKASI --}}
+    @if(session('success'))
+        <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-4 flex items-center gap-3 shadow-sm animate-fade-in">
+            <svg class="w-5 h-5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span class="text-sm font-semibold">{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if($errors->any())
+        <div class="bg-red-50 border border-red-200 text-red-800 rounded-2xl p-4 flex items-start gap-3 shadow-sm animate-fade-in">
+            <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="text-sm font-medium">
+                <span class="font-bold">Terjadi kendala pada input data:</span>
+                <ul class="list-disc list-inside mt-1 space-y-0.5 text-xs sm:text-sm">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
     <!-- Main Profile Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Left Column: Identity & Status Card -->
@@ -124,84 +146,176 @@
 
         <!-- Right Column: Detailed Citizen & Account Information -->
         <div class="lg:col-span-2 space-y-6">
+
+            <!-- 1. IDENTITAS TERVERIFIKASI (READ-ONLY) -->
             <div class="bg-white rounded-3xl border border-gray-150 shadow-sm p-6 sm:p-8 space-y-6">
                 <div>
-                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
-                        <span class="w-2.5 h-6 bg-green-500 rounded-full"></span>
-                        Data Kependudukan Terdaftar
-                    </h3>
-                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Data identitas resmi yang terhubung dengan akun SIPESDA Anda.</p>
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                            <span class="w-2.5 h-6 bg-emerald-500 rounded-full"></span>
+                            Identitas Kependudukan Resmi
+                        </h3>
+                        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 text-gray-600">
+                            <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            Terkunci (Data Sah)
+                        </span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Data identitas ini telah diverifikasi sesuai buku induk kependudukan Desa Medini dan digunakan sebagai dasar penerbitan surat.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-1">
                     <!-- NIK -->
-                    <div class="bg-gray-50/70 rounded-2xl p-4 border border-gray-150">
+                    <div class="bg-gray-50/80 rounded-2xl p-4 border border-gray-200">
                         <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Nomor Induk Kependudukan (NIK)</span>
                         <p class="text-sm sm:text-base font-bold text-gray-900 font-mono mt-1">{{ $user->nik }}</p>
                     </div>
 
                     <!-- Nama Lengkap -->
-                    <div class="bg-gray-50/70 rounded-2xl p-4 border border-gray-150">
-                        <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Nama Lengkap (KTP)</span>
+                    <div class="bg-gray-50/80 rounded-2xl p-4 border border-gray-200">
+                        <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Nama Lengkap (Sesuai KTP)</span>
                         <p class="text-sm sm:text-base font-bold text-gray-900 mt-1">{{ $user->nama }}</p>
-                    </div>
-
-                    <!-- No WhatsApp / HP -->
-                    <div class="bg-gray-50/70 rounded-2xl p-4 border border-gray-150">
-                        <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Nomor HP / WhatsApp</span>
-                        <p class="text-sm sm:text-base font-semibold text-gray-900 mt-1 flex items-center gap-2">
-                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-                            {{ $user->no_hp ?: '-' }}
-                        </p>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="bg-gray-50/70 rounded-2xl p-4 border border-gray-150">
-                        <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Alamat Email</span>
-                        <p class="text-sm sm:text-base font-semibold text-gray-900 mt-1 truncate">
-                            {{ $user->email ?: 'Belum ditambahkan' }}
-                        </p>
-                    </div>
-
-                    <!-- Alamat Lengkap -->
-                    <div class="sm:col-span-2 bg-gray-50/70 rounded-2xl p-4 border border-gray-150">
-                        <span class="text-xs text-gray-400 block font-semibold uppercase tracking-wider">Alamat Domisili</span>
-                        <p class="text-sm sm:text-base font-medium text-gray-800 mt-1 leading-relaxed">
-                            {{ $user->alamat ?: 'Desa Medini, Kec. Undaan, Kab. Kudus' }}
-                        </p>
                     </div>
                 </div>
 
                 <!-- Foto KTP Section -->
-                <div class="border-t border-gray-100 pt-6 space-y-3">
-                    <h4 class="text-sm font-bold text-gray-800 flex items-center gap-2">
-                        <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                        Lampiran Berkas KTP
+                <div class="border-t border-gray-100 pt-5 space-y-3">
+                    <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        Berkas Foto KTP Terverifikasi
                     </h4>
 
                     @if($user->foto_ktp)
                         <div class="bg-gray-50 rounded-2xl p-4 border border-gray-200 flex flex-col sm:flex-row items-center gap-4">
-                            <div class="w-full sm:w-48 h-32 rounded-xl overflow-hidden bg-black/5 border border-gray-300 shrink-0">
+                            <div class="w-full sm:w-44 h-28 rounded-xl overflow-hidden bg-black/5 border border-gray-300 shrink-0">
                                 <img src="{{ asset('storage/' . $user->foto_ktp) }}" alt="Foto KTP {{ $user->nama }}" class="w-full h-full object-cover">
                             </div>
-                            <div class="space-y-2 text-center sm:text-left">
-                                <p class="text-xs font-semibold text-gray-700">Foto KTP Resmi Terverifikasi</p>
-                                <p class="text-xs text-gray-400">Berkas ini digunakan sebagai bukti verifikasi administrasi kependudukan.</p>
-                                <a href="{{ asset('storage/' . $user->foto_ktp) }}" target="_blank" class="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 hover:text-green-800 transition">
-                                    Buka Foto KTP Ukuran Penuh
+                            <div class="space-y-1.5 text-center sm:text-left">
+                                <p class="text-xs font-bold text-gray-800">Foto KTP Warga Resmi</p>
+                                <p class="text-xs text-gray-500">Digunakan oleh Staff Desa untuk validasi berkas administrasi.</p>
+                                <a href="{{ asset('storage/' . $user->foto_ktp) }}" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold text-emerald-600 hover:text-emerald-800 transition">
+                                    Buka Foto Ukuran Penuh
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                                 </a>
                             </div>
                         </div>
                     @else
-                        <div class="bg-gray-50 rounded-2xl p-5 border border-dashed border-gray-200 text-center text-xs text-gray-400">
-                            Tidak ada lampiran foto KTP yang diunggah.
+                        <div class="bg-gray-50 rounded-2xl p-4 border border-dashed border-gray-200 text-center text-xs text-gray-400">
+                            Tidak ada lampiran berkas foto KTP.
                         </div>
                     @endif
                 </div>
             </div>
+
+            <!-- 2. FORM UBAH KONTAK & DOMISILI -->
+            <div class="bg-white rounded-3xl border border-gray-150 shadow-sm p-6 sm:p-8 space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <span class="w-2.5 h-6 bg-blue-500 rounded-full"></span>
+                        Ubah Kontak & Domisili
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Perbarui alamat email, nomor telepon, dan domisili Anda agar pemberitahuan surat tersampaikan dengan lancar.</p>
+                </div>
+
+                <form action="{{ route('profil.update') }}" method="POST" class="space-y-5">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                Alamat Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition shadow-sm"
+                                   placeholder="nama@contoh.com">
+                            <p class="text-[11px] text-gray-400 mt-1">Notifikasi persetujuan surat resmi akan dikirim ke alamat ini.</p>
+                        </div>
+
+                        <!-- No HP / WhatsApp -->
+                        <div>
+                            <label for="no_hp" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                No. HP / WhatsApp <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" id="no_hp" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}" required
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition shadow-sm"
+                                   placeholder="Contoh: 08123456789">
+                            <p class="text-[11px] text-gray-400 mt-1">Gunakan nomor aktif yang terhubung dengan WhatsApp.</p>
+                        </div>
+                    </div>
+
+                    <!-- Alamat Domisili -->
+                    <div>
+                        <label for="alamat" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                            Alamat Domisili Lengkap (RT/RW) <span class="text-red-500">*</span>
+                        </label>
+                        <textarea id="alamat" name="alamat" rows="3" required
+                                  class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition shadow-sm leading-relaxed"
+                                  placeholder="Contoh: RT 02 / RW 01, Desa Medini, Kecamatan Undaan">{{ old('alamat', $user->alamat) }}</textarea>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm transition shadow-md shadow-emerald-200 hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Simpan Perubahan Kontak
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 3. FORM GANTI KATA SANDI -->
+            <div class="bg-white rounded-3xl border border-gray-150 shadow-sm p-6 sm:p-8 space-y-6">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+                        <span class="w-2.5 h-6 bg-amber-500 rounded-full"></span>
+                        Ubah Kata Sandi (Keamanan)
+                    </h3>
+                    <p class="text-xs sm:text-sm text-gray-500 mt-1">Ganti kata sandi secara berkala dengan minimal 6 karakter untuk menjaga keamanan akun Anda.</p>
+                </div>
+
+                <form action="{{ route('profil.password') }}" method="POST" class="space-y-5">
+                    @csrf
+                    @method('PUT')
+
+                    <div>
+                        <label for="current_password" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                            Kata Sandi Saat Ini <span class="text-red-500">*</span>
+                        </label>
+                        <input type="password" id="current_password" name="current_password" required
+                               class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition shadow-sm"
+                               placeholder="Masukkan kata sandi lama Anda">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div>
+                            <label for="password" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                Kata Sandi Baru <span class="text-red-500">*</span>
+                            </label>
+                            <input type="password" id="password" name="password" required minlength="6"
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition shadow-sm"
+                                   placeholder="Minimal 6 karakter">
+                        </div>
+
+                        <div>
+                            <label for="password_confirmation" class="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                Konfirmasi Kata Sandi Baru <span class="text-red-500">*</span>
+                            </label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" required minlength="6"
+                                   class="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 transition shadow-sm"
+                                   placeholder="Ketik ulang kata sandi baru">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" class="inline-flex items-center gap-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-sm transition shadow-md shadow-amber-200 hover:-translate-y-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                            Perbarui Kata Sandi
+                        </button>
+                    </div>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
 @endsection
-
