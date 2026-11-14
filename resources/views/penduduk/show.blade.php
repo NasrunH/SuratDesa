@@ -169,7 +169,7 @@
                             <tr class="hover:bg-slate-50/50 transition-colors">
                                 <td class="py-3.5 px-4 font-semibold text-gray-800">{{ $item->jenisSurat->nama_surat }}</td>
                                 <td class="py-3.5 px-4 font-mono text-xs text-gray-600">{{ $item->nomor_surat ?? '-' }}</td>
-                                <td class="py-3.5 px-4 text-gray-600">{{ $item->created_at->format('d M Y') }}</td>
+                                <td class="py-3.5 px-4 text-gray-600">{{ $item->created_at->translatedFormat('d M Y') }}</td>
                                 <td class="py-3.5 px-4 text-center">
                                     @php
                                         $badges = [

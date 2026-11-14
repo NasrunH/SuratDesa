@@ -99,9 +99,9 @@
                     Aktifkan Akun
                 </h3>
                 <p class="text-sm text-emerald-700 mb-5 font-light">Jika data KTP warga <strong>terbukti valid</strong> dan sesuai dengan catatan kependudukan desa, klik tombol di bawah untuk mengaktifkan akun.</p>
-                <form action="{{ route('staff.akun.aktivasi', $warga->id_penduduk) }}" method="POST" onsubmit="return confirm('Yakin ingin MENGAKTIFKAN akun {{ $warga->nama }}?')">
+                <form action="{{ route('staff.akun.aktivasi', $warga->id_penduduk) }}" method="POST" onsubmit="confirmAction(event, this, 'Aktifkan Akun Warga', 'Pastikan data KTP dan kependudukan {{ $warga->nama }} valid sebelum mengaktifkan.', 'question', '#059669', 'Ya, Aktifkan Akun')">
                     @csrf
-                    <button type="submit" class="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold rounded-xl shadow-md shadow-emerald-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-300 transition-all">
+                    <button type="submit" class="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-emerald-600 to-green-500 text-white font-bold rounded-xl shadow-md shadow-emerald-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-emerald-300 transition-all cursor-pointer">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                         Ya, Aktifkan Akun Ini
                     </button>
@@ -115,7 +115,7 @@
                     Tolak / Non-aktifkan Akun
                 </h3>
                 <p class="text-sm text-red-700 mb-4 font-light">Jika data <strong>tidak valid</strong>, tidak terdaftar sebagai warga Desa Medini, atau KTP palsu/tidak jelas, tolak pendaftaran ini.</p>
-                <form action="{{ route('staff.akun.tolak', $warga->id_penduduk) }}" method="POST" onsubmit="return confirm('Yakin ingin MENOLAK akun {{ $warga->nama }}? Alasan penolakan wajib diisi.')">
+                <form action="{{ route('staff.akun.tolak', $warga->id_penduduk) }}" method="POST" onsubmit="if(!this.catatan_penolakan.reportValidity()) return false; confirmAction(event, this, 'Tolak Pendaftaran Akun', 'Apakah Anda yakin ingin menolak akun {{ $warga->nama }}?', 'warning', '#ef4444', 'Ya, Tolak Akun')">
                     @csrf
                     <div class="mb-4">
                         <label for="catatan_penolakan" class="block text-sm font-semibold text-red-800 mb-1.5">Alasan Penolakan <span class="text-red-500">*</span></label>

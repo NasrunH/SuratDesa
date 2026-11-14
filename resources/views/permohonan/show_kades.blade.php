@@ -53,7 +53,7 @@
                                 @if($verif->status_verifikasi == 'terverifikasi')
                                 <div class="flex items-center text-green-600 text-sm">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
-                                    Terverifikasi oleh {{ $verif->staff->penduduk->nama }} pada {{ \Carbon\Carbon::parse($verif->tanggal_verifikasi)->format('d/m/Y H:i') }}
+                                    Terverifikasi oleh {{ $verif->staff->penduduk->nama }} pada {{ \Carbon\Carbon::parse($verif->tanggal_verifikasi)->translatedFormat('d F Y, H:i') }} WIB
                                 </div>
                                 @if($verif->catatan)
                                 <p class="text-gray-600 text-xs mt-1 ml-5">Catatan: "{{ $verif->catatan }}"</p>

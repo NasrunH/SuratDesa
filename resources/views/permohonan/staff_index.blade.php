@@ -85,7 +85,7 @@
                     @forelse($permohonan as $item)
                     <tr class="hover:bg-slate-50/60 transition-colors">
                         <td class="px-5 py-3.5 text-gray-500 text-xs whitespace-nowrap">
-                            {{ $item->created_at->format('d M Y') }}<br>
+                            {{ $item->created_at->translatedFormat('d M Y') }}<br>
                             <span class="text-gray-400">{{ $item->created_at->format('H:i') }}</span>
                         </td>
                         <td class="px-5 py-3.5">

@@ -129,7 +129,7 @@
                                             <p class="text-sm text-gray-500">Pengajuan dibuat oleh <span class="font-medium text-gray-900">Anda</span></p>
                                         </div>
                                         <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time datetime="{{ $permohonan->tanggal_pengajuan }}">{{ \Carbon\Carbon::parse($permohonan->tanggal_pengajuan)->format('d M H:i') }}</time>
+                                            <time datetime="{{ $permohonan->tanggal_pengajuan }}">{{ \Carbon\Carbon::parse($permohonan->tanggal_pengajuan)->translatedFormat('d M H:i') }}</time>
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                                             <p class="text-sm text-gray-500">Berkas <span class="font-medium text-gray-900">{{ $verif->status_verifikasi }}</span> oleh Staff Desa</p>
                                         </div>
                                         <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time datetime="{{ $verif->tanggal_verifikasi }}">{{ \Carbon\Carbon::parse($verif->tanggal_verifikasi)->format('d M H:i') }}</time>
+                                            <time datetime="{{ $verif->tanggal_verifikasi }}">{{ \Carbon\Carbon::parse($verif->tanggal_verifikasi)->translatedFormat('d M H:i') }}</time>
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@
                                             <p class="text-sm text-gray-500">Penerbitan surat <span class="font-medium text-gray-900">{{ $setuju->status_persetujuan }}</span> oleh Kepala Desa</p>
                                         </div>
                                         <div class="text-right text-sm whitespace-nowrap text-gray-500">
-                                            <time datetime="{{ $setuju->tanggal_persetujuan }}">{{ \Carbon\Carbon::parse($setuju->tanggal_persetujuan)->format('d M H:i') }}</time>
+                                            <time datetime="{{ $setuju->tanggal_persetujuan }}">{{ \Carbon\Carbon::parse($setuju->tanggal_persetujuan)->translatedFormat('d M H:i') }}</time>
                                         </div>
                                     </div>
                                 </div>

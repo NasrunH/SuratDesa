@@ -200,6 +200,68 @@
             });
         }
 
+        /**
+         * Konfirmasi Hapus Data dengan SweetAlert2
+         */
+        function confirmDelete(event, form, title = 'Konfirmasi Hapus Data', text = 'Data yang dihapus tidak dapat dikembalikan. Apakah Anda yakin?') {
+            if (event) event.preventDefault();
+            const targetForm = form || (event ? event.target.closest('form') : null);
+            if (!targetForm) return;
+
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup: 'rounded-2xl shadow-xl',
+                    confirmButton: 'rounded-xl font-bold px-5 py-2.5 text-sm',
+                    cancelButton: 'rounded-xl font-medium px-5 py-2.5 text-sm'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    targetForm.submit();
+                }
+            });
+        }
+
+        /**
+         * Konfirmasi Aksi Umum dengan SweetAlert2
+         */
+        function confirmAction(event, form, title = 'Konfirmasi Tindakan', text = 'Apakah Anda yakin ingin melanjutkan?', icon = 'question', confirmColor = '#0d9488', confirmText = 'Ya, Lanjutkan') {
+            if (event) event.preventDefault();
+            const targetForm = form || (event ? event.target.closest('form') : null);
+            if (!targetForm) return;
+
+            Swal.fire({
+                title: title,
+                text: text,
+                icon: icon,
+                showCancelButton: true,
+                confirmButtonColor: confirmColor,
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: confirmText,
+                cancelButtonText: 'Batal',
+                reverseButtons: true,
+                focusCancel: true,
+                customClass: {
+                    popup: 'rounded-2xl shadow-xl',
+                    confirmButton: 'rounded-xl font-bold px-5 py-2.5 text-sm',
+                    cancelButton: 'rounded-xl font-medium px-5 py-2.5 text-sm'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    targetForm.submit();
+                }
+            });
+        }
+
         // Tangkap juga submit event langsung jika ada form logout lain
         document.addEventListener('DOMContentLoaded', function () {
             const logoutForms = document.querySelectorAll('form[action="{{ route('logout') }}"]');
@@ -210,6 +272,23 @@
                         confirmLogout(e, form);
                     }
                 });
+            });
+
+            // Intercept otomatis form DELETE
+            document.querySelectorAll('form').forEach(function (form) {
+                const hasDeleteMethod = form.querySelector('input[name="_method"][value="DELETE"]') !== null;
+                if (hasDeleteMethod && !form.dataset.hasDeleteInterceptor) {
+                    form.dataset.hasDeleteInterceptor = 'true';
+                    form.addEventListener('submit', function (e) {
+                        if (form.dataset.swalPassed === 'true') return;
+                        e.preventDefault();
+
+                        const title = form.getAttribute('data-confirm-title') || 'Konfirmasi Hapus Data';
+                        const text = form.getAttribute('data-confirm-message') || 'Data ini akan dihapus dari sistem. Apakah Anda yakin?';
+
+                        confirmDelete(e, form, title, text);
+                    });
+                }
             });
         });
     </script>

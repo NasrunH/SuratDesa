@@ -59,7 +59,7 @@
                         @forelse($permohonan as $item)
                         <tr class="hover:bg-teal-50/30 transition-colors group">
                             <td class="px-6 py-5 text-gray-500 font-medium">
-                                {{ $item->created_at->format('d M Y') }} <br>
+                                {{ $item->created_at->translatedFormat('d M Y') }} <br>
                                 <span class="text-xs font-light">{{ $item->created_at->format('H:i') }}</span>
                             </td>
                             <td class="px-6 py-5">

@@ -14,7 +14,7 @@
         </a>
 
         <div class="text-xs text-gray-500 hidden sm:block">
-            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $user->created_at ? $user->created_at->format('d M Y') : '-' }}</span>
+            Terdaftar sejak: <span class="font-semibold text-gray-700">{{ $user->created_at ? $user->created_at->translatedFormat('d F Y') : '-' }}</span>
         </div>
     </div>
 

@@ -69,7 +69,7 @@
                             <tr class="hover:bg-blue-50/50 transition-colors group">
                                 <td class="px-6 py-5">
                                     <div class="font-medium text-gray-900">{{ $item->penduduk->nama }}</div>
-                                    <div class="text-xs text-gray-500">{{ $item->created_at->format('d M Y H:i') }}</div>
+                                    <div class="text-xs text-gray-500">{{ $item->created_at->translatedFormat('d M Y, H:i') }}</div>
                                 </td>
                                 <td class="px-6 py-5 text-gray-600 font-medium">
                                     {{ $item->jenisSurat->nama_surat }}

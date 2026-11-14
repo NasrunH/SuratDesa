@@ -127,10 +127,10 @@
                             <p class="text-sm italic text-red-700 line-clamp-2">"{{ $warga->catatan_penolakan }}"</p>
                         </td>
                         <td class="px-6 py-4 text-gray-500 text-xs">
-                            {{ $warga->updated_at->format('d M Y') }}
+                            {{ $warga->updated_at->translatedFormat('d M Y') }}
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <form action="{{ route('staff.akun.reaktivasi', $warga->id_penduduk) }}" method="POST" onsubmit="return confirm('Aktifkan kembali akun {{ $warga->nama }}?')">
+                            <form action="{{ route('staff.akun.reaktivasi', $warga->id_penduduk) }}" method="POST" onsubmit="confirmAction(event, this, 'Aktifkan Kembali Akun', 'Apakah Anda yakin ingin mengaktifkan kembali akun {{ $warga->nama }}?', 'question', '#059669', 'Ya, Aktifkan')">
                                 @csrf
                                 <button type="submit" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-300 rounded-lg transition text-xs font-bold shadow-sm">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>

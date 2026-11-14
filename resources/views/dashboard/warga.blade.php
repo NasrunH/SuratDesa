@@ -246,7 +246,7 @@
                         <div class="flex items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
                             <span class="text-xs text-gray-500 flex items-center gap-1">
                                 <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                {{ $item->created_at->format('d M Y') }}
+                                {{ $item->created_at->translatedFormat('d M Y') }}
                             </span>
 
                             <!-- Status Badge -->
@@ -348,7 +348,7 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 text-gray-500 whitespace-nowrap">
-                                    {{ $item->created_at->format('d M Y') }}
+                                    {{ $item->created_at->translatedFormat('d M Y') }}
                                 </td>
                                 <td class="px-6 py-4">
                                     @if($item->status == 'menunggu_verifikasi')
