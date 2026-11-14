@@ -398,8 +398,77 @@
         });
     }
 
+    // ==========================================
+    // SISTEM TOAST NOTIFIKASI (SWEETALERT2)
+    // ==========================================
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        },
+        customClass: {
+            popup: 'rounded-2xl shadow-2xl border border-gray-100 text-sm font-medium',
+            title: 'text-sm font-semibold text-gray-800'
+        }
+    });
+
+    window.Toast = Toast;
+    window.showToast = function(message, icon = 'success', title = '') {
+        Toast.fire({
+            icon: icon,
+            html: title ? `<strong class="block mb-1">${title}</strong>${message}` : message
+        });
+    };
+    window.toast = {
+        success: (msg, title = '') => window.showToast(msg, 'success', title),
+        error:   (msg, title = '') => window.showToast(msg, 'error', title),
+        warning: (msg, title = '') => window.showToast(msg, 'warning', title),
+        info:    (msg, title = '') => window.showToast(msg, 'info', title)
+    };
+
     // Tangkap juga submit event langsung jika ada form logout atau form delete lain
     document.addEventListener('DOMContentLoaded', function () {
+        // Otomatis picu Toast dari flash session Laravel
+        @if(session('success'))
+            Toast.fire({
+                icon: 'success',
+                html: {!! json_encode(session('success')) !!}
+            });
+        @endif
+
+        @if(session('error'))
+            Toast.fire({
+                icon: 'error',
+                html: {!! json_encode(session('error')) !!}
+            });
+        @endif
+
+        @if(session('warning'))
+            Toast.fire({
+                icon: 'warning',
+                html: {!! json_encode(session('warning')) !!}
+            });
+        @endif
+
+        @if(session('info'))
+            Toast.fire({
+                icon: 'info',
+                html: {!! json_encode(session('info')) !!}
+            });
+        @endif
+
+        @if($errors->any())
+            Toast.fire({
+                icon: 'error',
+                html: {!! json_encode($errors->first()) !!}
+            });
+        @endif
+
         const logoutForms = document.querySelectorAll('form[action="{{ route('logout') }}"]');
         logoutForms.forEach(function (form) {
             form.addEventListener('submit', function (e) {
