@@ -119,7 +119,10 @@
                     @csrf
                     <div class="mb-4">
                         <label for="catatan_penolakan" class="block text-sm font-semibold text-red-800 mb-1.5">Alasan Penolakan <span class="text-red-500">*</span></label>
-                        <textarea id="catatan_penolakan" name="catatan_penolakan" rows="3" required minlength="10" class="appearance-none block w-full px-4 py-3 border border-red-200 rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition text-sm" placeholder="Contoh: Data NIK tidak ditemukan di buku induk desa / foto KTP tidak terbaca jelas..."></textarea>
+                        <textarea id="catatan_penolakan" name="catatan_penolakan" rows="3" required minlength="10" class="appearance-none block w-full px-4 py-3 border @error('catatan_penolakan') border-red-500 ring-2 ring-red-400/40 @else border-red-200 @enderror rounded-xl bg-white/80 focus:outline-none focus:ring-2 focus:ring-red-400/50 focus:border-red-400 transition text-sm" placeholder="Contoh: Data NIK tidak ditemukan di buku induk desa / foto KTP tidak terbaca jelas...">{{ old('catatan_penolakan') }}</textarea>
+                        @error('catatan_penolakan')
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
                     <button type="submit" class="w-full flex items-center justify-center gap-2 py-3 bg-white border-2 border-red-400 text-red-700 font-bold rounded-xl hover:bg-red-600 hover:text-white hover:border-red-600 transition-all">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>

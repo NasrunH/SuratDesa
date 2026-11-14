@@ -89,10 +89,25 @@ class PendudukController extends Controller
         }
 
         $request->validate($rules, [
-            'nik.size' => 'NIK harus tepat 16 digit.',
-            'nik.unique' => 'NIK sudah digunakan.',
-            'email.unique' => 'Email sudah digunakan.',
-            'nip.unique' => 'NIP sudah digunakan.',
+            'nik.required'             => 'NIK wajib diisi.',
+            'nik.size'                 => 'NIK harus tepat 16 digit angka.',
+            'nik.unique'               => 'NIK ini sudah terdaftar di sistem.',
+            'nama.required'            => 'Nama lengkap wajib diisi sesuai KTP.',
+            'email.email'              => 'Format alamat email tidak valid.',
+            'email.unique'             => 'Alamat email ini sudah digunakan oleh akun lain.',
+            'password.required'        => 'Kata sandi akun wajib diisi.',
+            'password.min'             => 'Kata sandi minimal 6 karakter.',
+            'role.required'            => 'Peran / hak akses pengguna wajib dipilih.',
+            'role.in'                  => 'Pilihan peran pengguna tidak valid.',
+            'status_akun.required'     => 'Status akun pengguna wajib ditentukan.',
+            'status_akun.in'           => 'Pilihan status akun tidak valid.',
+            'foto_ktp.image'           => 'File KTP harus berupa gambar.',
+            'foto_ktp.mimes'           => 'Format foto KTP harus berupa JPG, JPEG, atau PNG.',
+            'foto_ktp.max'             => 'Ukuran foto KTP maksimal 2 MB.',
+            'nip.required'             => 'NIP wajib diisi untuk aparatur desa.',
+            'nip.unique'               => 'NIP ini sudah terdaftar di sistem.',
+            'jabatan.required'         => 'Jabatan staff desa wajib diisi.',
+            'periode_jabatan.required' => 'Periode masa jabatan Kepala Desa wajib diisi.',
         ]);
 
         $fotoPath = null;
@@ -202,10 +217,24 @@ class PendudukController extends Controller
         }
 
         $request->validate($rules, [
-            'nik.size' => 'NIK harus tepat 16 digit.',
-            'nik.unique' => 'NIK sudah digunakan.',
-            'email.unique' => 'Email sudah digunakan.',
-            'nip.unique' => 'NIP sudah digunakan.',
+            'nik.required'             => 'NIK wajib diisi.',
+            'nik.size'                 => 'NIK harus tepat 16 digit angka.',
+            'nik.unique'               => 'NIK ini sudah digunakan oleh data penduduk lain.',
+            'nama.required'            => 'Nama lengkap wajib diisi sesuai KTP.',
+            'email.email'              => 'Format alamat email tidak valid.',
+            'email.unique'             => 'Alamat email ini sudah digunakan oleh akun lain.',
+            'password.min'             => 'Kata sandi baru minimal 6 karakter.',
+            'role.required'            => 'Peran / hak akses pengguna wajib dipilih.',
+            'role.in'                  => 'Pilihan peran pengguna tidak valid.',
+            'status_akun.required'     => 'Status akun pengguna wajib ditentukan.',
+            'status_akun.in'           => 'Pilihan status akun tidak valid.',
+            'foto_ktp.image'           => 'File KTP harus berupa gambar.',
+            'foto_ktp.mimes'           => 'Format foto KTP harus berupa JPG, JPEG, atau PNG.',
+            'foto_ktp.max'             => 'Ukuran foto KTP maksimal 2 MB.',
+            'nip.required'             => 'NIP wajib diisi untuk aparatur desa.',
+            'nip.unique'               => 'NIP ini sudah digunakan oleh aparatur lain.',
+            'jabatan.required'         => 'Jabatan staff desa wajib diisi.',
+            'periode_jabatan.required' => 'Periode masa jabatan Kepala Desa wajib diisi.',
         ]);
 
         $data = [

@@ -105,24 +105,30 @@
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700 mb-2">Pilih Keputusan</label>
                         <div class="flex items-center space-x-6">
-                            <label class="flex items-center">
-                                <input type="radio" name="status_verifikasi" value="terverifikasi" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300" required>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="status_verifikasi" value="terverifikasi" {{ old('status_verifikasi') === 'terverifikasi' ? 'checked' : '' }} class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300" required>
                                 <span class="ml-2 text-sm text-gray-900">Berkas Valid (Teruskan ke Kades)</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="status_verifikasi" value="revisi" class="focus:ring-yellow-500 h-4 w-4 text-yellow-600 border-gray-300" required>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="status_verifikasi" value="revisi" {{ old('status_verifikasi') === 'revisi' ? 'checked' : '' }} class="focus:ring-yellow-500 h-4 w-4 text-yellow-600 border-gray-300" required>
                                 <span class="ml-2 text-sm text-gray-900">Butuh Revisi Pemohon</span>
                             </label>
-                            <label class="flex items-center">
-                                <input type="radio" name="status_verifikasi" value="ditolak" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300" required>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="status_verifikasi" value="ditolak" {{ old('status_verifikasi') === 'ditolak' ? 'checked' : '' }} class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300" required>
                                 <span class="ml-2 text-sm text-gray-900">Tolak Permohonan</span>
                             </label>
                         </div>
+                        @error('status_verifikasi')
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="mb-4">
-                        <label for="catatan" class="block text-sm font-medium text-gray-700">Catatan Verifikasi</label>
-                        <textarea id="catatan" name="catatan" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Opsional jika valid, wajib diisi jika revisi/ditolak"></textarea>
+                        <label for="catatan" class="block text-sm font-medium text-gray-700">Catatan Verifikasi <span class="text-xs text-gray-500 font-normal">(Wajib diisi jika revisi / ditolak)</span></label>
+                        <textarea id="catatan" name="catatan" rows="3" class="mt-1 block w-full px-3 py-2 border @error('catatan') border-red-400 ring-1 ring-red-400 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" placeholder="Tuliskan catatan perbaikan atau alasan penolakan secara jelas...">{{ old('catatan') }}</textarea>
+                        @error('catatan')
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="flex justify-end mt-4">

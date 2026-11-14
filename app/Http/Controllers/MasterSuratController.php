@@ -47,8 +47,13 @@ class MasterSuratController extends Controller
             'syarat.*.tipe'      => 'required|in:text,textarea,file,number,date',
             'syarat.*.is_wajib'  => 'nullable|boolean',
         ], [
-            'nama_surat.unique' => 'Nama surat ini sudah terdaftar.',
-            'syarat.*.nama.required' => 'Nama syarat tidak boleh kosong.',
+            'nama_surat.required'     => 'Nama jenis surat wajib diisi.',
+            'nama_surat.max'          => 'Nama jenis surat maksimal 100 karakter.',
+            'nama_surat.unique'       => 'Nama jenis surat ini sudah terdaftar di sistem.',
+            'syarat.*.nama.required'  => 'Nama kolom persyaratan wajib diisi.',
+            'syarat.*.nama.max'       => 'Nama persyaratan maksimal 100 karakter.',
+            'syarat.*.tipe.required'  => 'Tipe input syarat wajib dipilih.',
+            'syarat.*.tipe.in'        => 'Tipe input syarat tidak valid.',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -104,6 +109,14 @@ class MasterSuratController extends Controller
             'syarat.*.nama'      => 'required|string|max:100',
             'syarat.*.tipe'      => 'required|in:text,textarea,file,number,date',
             'syarat.*.is_wajib'  => 'nullable|boolean',
+        ], [
+            'nama_surat.required'     => 'Nama jenis surat wajib diisi.',
+            'nama_surat.max'          => 'Nama jenis surat maksimal 100 karakter.',
+            'nama_surat.unique'       => 'Nama jenis surat ini sudah digunakan oleh surat lain.',
+            'syarat.*.nama.required'  => 'Nama kolom persyaratan wajib diisi.',
+            'syarat.*.nama.max'       => 'Nama persyaratan maksimal 100 karakter.',
+            'syarat.*.tipe.required'  => 'Tipe input syarat wajib dipilih.',
+            'syarat.*.tipe.in'        => 'Tipe input syarat tidak valid.',
         ]);
 
         DB::transaction(function () use ($request, $jenisSurat) {

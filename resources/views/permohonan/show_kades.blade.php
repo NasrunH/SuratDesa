@@ -114,7 +114,7 @@
                     <div class="mb-6 space-y-4">
                         <label class="relative flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-green-50 transition">
                             <div class="flex items-center h-5">
-                                <input type="radio" name="status_persetujuan" value="disetujui" class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300" required>
+                                <input type="radio" name="status_persetujuan" value="disetujui" {{ old('status_persetujuan') === 'disetujui' ? 'checked' : '' }} class="focus:ring-green-500 h-4 w-4 text-green-600 border-gray-300" required>
                             </div>
                             <div class="ml-3 flex-1">
                                 <span class="block text-sm font-medium text-green-800">Setujui & Terbitkan Surat</span>
@@ -124,18 +124,24 @@
 
                         <label class="relative flex items-start p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-red-50 transition">
                             <div class="flex items-center h-5">
-                                <input type="radio" name="status_persetujuan" value="ditolak" class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300" required>
+                                <input type="radio" name="status_persetujuan" value="ditolak" {{ old('status_persetujuan') === 'ditolak' ? 'checked' : '' }} class="focus:ring-red-500 h-4 w-4 text-red-600 border-gray-300" required>
                             </div>
                             <div class="ml-3 flex-1">
                                 <span class="block text-sm font-medium text-red-800">Tolak Permohonan</span>
                                 <span class="block text-xs text-gray-500 mt-1">Tolak dengan menyertakan alasan kebijakan atau hukum terkait.</span>
                             </div>
                         </label>
+                        @error('status_persetujuan')
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="mb-6">
-                        <label for="catatan" class="block text-sm font-medium text-gray-700">Catatan/Alasan (Opsional/Wajib bila menolak)</label>
-                        <textarea id="catatan" name="catatan" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        <label for="catatan" class="block text-sm font-medium text-gray-700">Catatan / Alasan Penolakan <span class="text-xs text-gray-500 font-normal">(Wajib diisi jika permohonan ditolak)</span></label>
+                        <textarea id="catatan" name="catatan" rows="3" class="mt-1 block w-full px-3 py-2 border @error('catatan') border-red-400 ring-1 ring-red-400 @else border-gray-300 @enderror rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" placeholder="Tuliskan catatan atau alasan spesifik penolakan di sini...">{{ old('catatan') }}</textarea>
+                        @error('catatan')
+                            <p class="text-xs text-red-600 font-semibold mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="flex justify-end pt-4 border-t border-gray-200">

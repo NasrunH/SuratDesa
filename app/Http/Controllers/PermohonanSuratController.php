@@ -42,6 +42,9 @@ class PermohonanSuratController extends Controller
     {
         $request->validate([
             'id_jenis_surat' => 'required|exists:jenis_surat,id_jenis_surat',
+        ], [
+            'id_jenis_surat.required' => 'Silakan pilih jenis surat yang ingin diajukan.',
+            'id_jenis_surat.exists'   => 'Jenis surat yang dipilih tidak ditemukan dalam sistem.',
         ]);
 
         $jenisSurat = JenisSurat::with('syarat')->findOrFail($request->id_jenis_surat);
@@ -344,6 +347,10 @@ class PermohonanSuratController extends Controller
         $request->validate([
             'status_verifikasi' => 'required|in:terverifikasi,revisi,ditolak',
             'catatan'           => 'required_if:status_verifikasi,revisi,ditolak',
+        ], [
+            'status_verifikasi.required' => 'Keputusan verifikasi wajib dipilih.',
+            'status_verifikasi.in'       => 'Pilihan status verifikasi tidak valid.',
+            'catatan.required_if'        => 'Catatan/alasan wajib diisi jika status permohonan ditolak atau butuh revisi dari pemohon.',
         ]);
 
         $permohonan = PermohonanSurat::findOrFail($id);
@@ -451,6 +458,10 @@ class PermohonanSuratController extends Controller
         $request->validate([
             'status_persetujuan' => 'required|in:disetujui,ditolak',
             'catatan'            => 'required_if:status_persetujuan,ditolak',
+        ], [
+            'status_persetujuan.required' => 'Keputusan persetujuan wajib dipilih.',
+            'status_persetujuan.in'       => 'Pilihan status persetujuan tidak valid.',
+            'catatan.required_if'         => 'Alasan penolakan wajib diisi apabila Anda menolak permohonan surat ini.',
         ]);
 
         $permohonan = PermohonanSurat::findOrFail($id);

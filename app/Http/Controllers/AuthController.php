@@ -98,7 +98,8 @@ class AuthController extends Controller
             'login'    => 'required|string',
             'password' => 'required|string',
         ], [
-            'login.required' => 'NIK atau Email wajib diisi.',
+            'login.required'    => 'NIK atau Email wajib diisi.',
+            'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
         $login = $credentials['login'];
