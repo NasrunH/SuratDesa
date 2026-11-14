@@ -205,7 +205,7 @@
                     <p class="text-red-800 font-medium text-sm">{{ session('error') }}</p>
                 </div>
             @endif
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 <div class="bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm">
                     <p class="text-red-800 font-bold text-sm mb-2">Terdapat kesalahan:</p>
                     <ul class="text-red-700 text-sm space-y-1 list-disc list-inside">
@@ -462,7 +462,7 @@
             });
         @endif
 
-        @if($errors->any())
+        @if(isset($errors) && $errors->any())
             Toast.fire({
                 icon: 'error',
                 html: {!! json_encode($errors->first()) !!}

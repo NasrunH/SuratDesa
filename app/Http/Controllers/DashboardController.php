@@ -43,12 +43,102 @@ class DashboardController extends Controller
             return view('dashboard.warga', compact('permohonan', 'pengumuman', 'search', 'sort', 'dir', 'jenisSuratList', 'stats'));
 
         } elseif ($user->role === 'staff') {
-            // Redirect ke halaman permohonan staff (sudah ada tab/pagination di sana)
-            return redirect()->route('staff.permohonan.index');
+            $stats = [
+                'menunggu_verifikasi'  => PermohonanSurat::where('status', 'menunggu_verifikasi')->count(),
+                'revisi'               => PermohonanSurat::where('status', 'revisi')->count(),
+                'menunggu_persetujuan' => PermohonanSurat::where('status', 'menunggu_persetujuan')->count(),
+                'selesai_bulan_ini'    => PermohonanSurat::whereIn('status', ['disetujui', 'selesai'])
+                                            ->whereMonth('updated_at', now()->month)
+                                            ->whereYear('updated_at', now()->year)
+                                            ->count(),
+                'total_permohonan'     => PermohonanSurat::count(),
+                'akun_pending'         => Penduduk::where('status_akun', 'pending')->where('role', 'warga')->count(),
+                'total_warga'          => Penduduk::where('role', 'warga')->count(),
+            ];
+
+            $totalAkunPending = $stats['akun_pending'];
+
+            // Antrean permohonan yang perlu tindakan staff (menunggu verifikasi & revisi)
+            $permohonan = PermohonanSurat::with(['penduduk', 'jenisSurat'])
+                ->whereIn('status', ['menunggu_verifikasi', 'revisi'])
+                ->orderByRaw("CASE WHEN status = 'menunggu_verifikasi' THEN 1 ELSE 2 END")
+                ->orderBy('created_at', 'asc')
+                ->take(8)
+                ->get();
+
+            // Antrean akun warga baru yang menunggu aktivasi
+            $antreanAkun = Penduduk::where('status_akun', 'pending')
+                ->where('role', 'warga')
+                ->latest('created_at')
+                ->take(5)
+                ->get();
+
+            // Surat terakhir yang telah disetujui / selesai
+            $suratTerakhirSelesai = PermohonanSurat::with(['penduduk', 'jenisSurat'])
+                ->whereIn('status', ['disetujui', 'selesai'])
+                ->latest('updated_at')
+                ->take(5)
+                ->get();
+
+            // Statistik jenis surat paling sering diajukan
+            $populer = JenisSurat::withCount('permohonanSurat')
+                ->where('is_aktif', true)
+                ->orderByDesc('permohonan_surat_count')
+                ->take(5)
+                ->get();
+
+            return view('dashboard.staff', compact(
+                'stats',
+                'totalAkunPending',
+                'permohonan',
+                'antreanAkun',
+                'suratTerakhirSelesai',
+                'populer'
+            ));
 
         } elseif ($user->role === 'kades') {
-            // Redirect ke halaman permohonan kades (sudah ada tab/pagination/stats di sana)
-            return redirect()->route('kades.permohonan.index');
+            $stats = [
+                'menunggu'          => PermohonanSurat::where('status', 'menunggu_persetujuan')->count(),
+                'disetujui'         => PermohonanSurat::whereIn('status', ['disetujui', 'selesai'])->count(),
+                'total_bln_ini'     => PermohonanSurat::whereMonth('created_at', now()->month)
+                                        ->whereYear('created_at', now()->year)
+                                        ->count(),
+                'disetujui_bln_ini' => PermohonanSurat::whereIn('status', ['disetujui', 'selesai'])
+                                        ->whereMonth('tanggal_terbit', now()->month)
+                                        ->whereYear('tanggal_terbit', now()->year)
+                                        ->count(),
+                'ditolak'           => PermohonanSurat::where('status', 'ditolak')->count(),
+                'total_warga_aktif' => Penduduk::where('role', 'warga')->where('status_akun', 'aktif')->count(),
+            ];
+
+            // Antrean permohonan yang menunggu tanda tangan (TTE) Kades
+            $permohonan = PermohonanSurat::with(['penduduk', 'jenisSurat', 'verifikasi.staff.penduduk'])
+                ->where('status', 'menunggu_persetujuan')
+                ->orderBy('created_at', 'asc')
+                ->take(8)
+                ->get();
+
+            // Surat-surat resmi yang telah diterbitkan (terbaru)
+            $suratTerbitTerbaru = PermohonanSurat::with(['penduduk', 'jenisSurat'])
+                ->whereIn('status', ['disetujui', 'selesai'])
+                ->whereNotNull('nomor_surat')
+                ->latest('tanggal_terbit')
+                ->take(5)
+                ->get();
+
+            // Statistik jenis surat paling sering diajukan
+            $populer = JenisSurat::withCount('permohonanSurat')
+                ->where('is_aktif', true)
+                ->orderByDesc('permohonan_surat_count')
+                ->take(5)
+                ->get();
+
+            return view('dashboard.kades', compact(
+                'stats',
+                'permohonan',
+                'suratTerbitTerbaru',
+                'populer'
+            ));
         }
 
         return abort(403);

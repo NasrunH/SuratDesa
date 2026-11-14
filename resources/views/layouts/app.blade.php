@@ -24,18 +24,37 @@
             <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-16 sm:h-20">
                     <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md border border-green-100 shrink-0">
-                            @if(file_exists(public_path('images/logo.png')))
-                                <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
-                            @else
-                                <div class="w-full h-full rounded-lg bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center text-white">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                                </div>
-                            @endif
+                        <a href="{{ route('dashboard') }}" class="flex items-center gap-2 sm:gap-3 min-w-0 hover:opacity-90 transition group">
+                            <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white flex items-center justify-center p-1 shadow-md border border-green-100 shrink-0 group-hover:scale-105 transition-transform">
+                                @if(file_exists(public_path('images/logo.png')))
+                                    <img src="{{ asset('images/logo.png') }}" class="w-full h-full object-contain" alt="Logo">
+                                @else
+                                    <div class="w-full h-full rounded-lg bg-gradient-to-tr from-green-600 to-emerald-400 flex items-center justify-center text-white">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="font-bold text-lg sm:text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-700 to-emerald-600 truncate">
+                                SIPESDA MEDINI
+                            </div>
+                        </a>
+
+                        @if(Auth::user()->role === 'kades')
+                        <div class="hidden md:flex items-center gap-1.5 ml-4 lg:ml-6 pl-4 lg:pl-6 border-l border-green-200">
+                            <a href="{{ route('dashboard') }}" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50' }}">
+                                Dashboard
+                            </a>
+                            <a href="{{ route('kades.permohonan.index') }}" class="relative px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('kades.permohonan.*') ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50' }}">
+                                Permohonan TTE
+                                @php $kadesPending = \App\Models\PermohonanSurat::where('status', 'menunggu_persetujuan')->count(); @endphp
+                                @if($kadesPending > 0)
+                                    <span class="ml-1.5 inline-flex items-center justify-center px-1.5 py-0.2 bg-amber-500 text-white text-[10px] font-black rounded-full">
+                                        {{ $kadesPending }}
+                                    </span>
+                                @endif
+                            </a>
                         </div>
-                        <div class="font-bold text-lg sm:text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-green-700 to-emerald-600 truncate">
-                            SIPESDA MEDINI
-                        </div>
+                        @endif
                     </div>
                     <!-- Profile Dropdown -->
                     <div class="relative shrink-0" id="profile-dropdown-wrapper">
@@ -85,6 +104,18 @@
                                         <p class="text-[11px] text-gray-400 font-normal">Halaman utama pengajuan</p>
                                     </div>
                                 </a>
+
+                                @if(Auth::user()->role === 'kades')
+                                <a href="{{ route('kades.permohonan.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition font-medium group">
+                                    <div class="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-blue-100 text-gray-500 group-hover:text-blue-700 flex items-center justify-center transition shrink-0">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                    </div>
+                                    <div>
+                                        <p class="font-bold leading-tight">Permohonan TTE</p>
+                                        <p class="text-[11px] text-gray-400 font-normal">Daftar berkas tanda tangan</p>
+                                    </div>
+                                </a>
+                                @endif
                             </div>
 
                             <div class="border-t border-gray-100 my-1"></div>
@@ -326,7 +357,7 @@
                 });
             @endif
 
-            @if($errors->any())
+            @if(isset($errors) && $errors->any())
                 Toast.fire({
                     icon: 'error',
                     html: {!! json_encode($errors->first()) !!}
