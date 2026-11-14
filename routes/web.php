@@ -33,9 +33,11 @@ Route::get('/storage/{path}', function ($path) {
 Route::get('/login',    [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login',   [AuthController::class, 'login']);
 
-Route::get('/register',         [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register',        [AuthController::class, 'register']);
-Route::get('/register/pending', [AuthController::class, 'registerPending'])->name('register.pending');
+Route::get('/register',                  [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register',                 [AuthController::class, 'register']);
+Route::get('/register/pending',          [AuthController::class, 'registerPending'])->name('register.pending');
+Route::get('/register/perbaiki/{id}',    [AuthController::class, 'showPerbaikiRegister'])->name('register.perbaiki');
+Route::put('/register/perbaiki/{id}',    [AuthController::class, 'updatePerbaikiRegister'])->name('register.perbaiki.update');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\Penduduk;
 
@@ -116,8 +117,14 @@ class AuthController extends Controller
             }
 
             if ($penduduk->status_akun === 'nonaktif') {
+                if (Hash::check($credentials['password'], $penduduk->password)) {
+                    return redirect()->route('register.perbaiki', $penduduk->id_penduduk)
+                                     ->with('warning', 'Pendaftaran akun Anda sebelumnya belum disetujui. Silakan periksa catatan dan perbaiki data Anda di bawah ini.');
+                }
+
+                $alasan = $penduduk->catatan_penolakan ? " Catatan: {$penduduk->catatan_penolakan}." : '';
                 return back()->withErrors([
-                    'login' => 'Akun Anda telah dinonaktifkan. Hubungi kantor desa untuk informasi lebih lanjut.',
+                    'login' => "Pendaftaran akun Anda belum dapat disetujui oleh Staff Desa.{$alasan} Masukkan password yang benar untuk memperbaiki data pendaftaran.",
                 ])->onlyInput('login');
             }
         }
@@ -142,6 +149,89 @@ class AuthController extends Controller
         return back()->withErrors([
             'login' => 'NIK/Email atau password yang Anda masukkan salah.',
         ])->onlyInput('login');
+    }
+
+    /**
+     * Tampilkan formulir perbaikan data pendaftaran akun.
+     */
+    public function showPerbaikiRegister($id)
+    {
+        $warga = Penduduk::findOrFail($id);
+
+        if ($warga->status_akun === 'aktif') {
+            return redirect()->route('login')->with('info', 'Akun Anda sudah aktif. Silakan login.');
+        }
+
+        if ($warga->status_akun === 'pending') {
+            return redirect()->route('register.pending')->with('nama', $warga->nama);
+        }
+
+        return view('auth.register_perbaiki', compact('warga'));
+    }
+
+    /**
+     * Simpan perbaikan data pendaftaran akun dan kirim ulang untuk verifikasi.
+     */
+    public function updatePerbaikiRegister(Request $request, $id)
+    {
+        $warga = Penduduk::findOrFail($id);
+
+        if ($warga->status_akun === 'aktif') {
+            return redirect()->route('login')->with('info', 'Akun Anda sudah aktif. Silakan login.');
+        }
+
+        $request->validate([
+            'nik'                   => 'required|string|size:16|unique:penduduk,nik,' . $warga->id_penduduk . ',id_penduduk',
+            'nama'                  => 'required|string|max:100',
+            'email'                 => 'required|email|max:100|unique:penduduk,email,' . $warga->id_penduduk . ',id_penduduk',
+            'no_hp'                 => 'required|string|max:20',
+            'alamat'                => 'required|string',
+            'password'              => 'nullable|string|min:6|confirmed',
+            'foto_ktp'              => ($warga->foto_ktp ? 'nullable' : 'required') . '|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'nik.required'          => 'NIK wajib diisi.',
+            'nik.size'              => 'NIK harus tepat 16 digit angka.',
+            'nik.unique'            => 'NIK ini sudah terdaftar di sistem.',
+            'nama.required'         => 'Nama lengkap wajib diisi sesuai KTP.',
+            'email.required'        => 'Alamat email wajib diisi.',
+            'email.email'           => 'Format alamat email tidak valid.',
+            'email.unique'          => 'Email ini sudah digunakan akun lain.',
+            'no_hp.required'        => 'Nomor HP / WhatsApp wajib diisi.',
+            'alamat.required'       => 'Alamat lengkap wajib diisi.',
+            'password.min'          => 'Password baru minimal 6 karakter.',
+            'password.confirmed'    => 'Konfirmasi password baru tidak cocok.',
+            'foto_ktp.required'     => 'Foto KTP fisik wajib diunggah.',
+            'foto_ktp.image'        => 'File KTP harus berupa gambar.',
+            'foto_ktp.mimes'        => 'Format foto KTP harus berupa JPG, JPEG, atau PNG.',
+            'foto_ktp.max'          => 'Ukuran foto KTP tidak boleh lebih dari 2 MB.',
+        ]);
+
+        if ($request->hasFile('foto_ktp')) {
+            if ($warga->foto_ktp && Storage::disk('public')->exists($warga->foto_ktp)) {
+                Storage::disk('public')->delete($warga->foto_ktp);
+            }
+            $warga->foto_ktp = $request->file('foto_ktp')->store('ktp_warga', 'public');
+        }
+
+        $warga->nik    = $request->nik;
+        $warga->nama   = $request->nama;
+        $warga->email  = $request->email;
+        $warga->no_hp  = $request->no_hp;
+        $warga->alamat = $request->alamat;
+
+        if ($request->filled('password')) {
+            $warga->password = Hash::make($request->password);
+        }
+
+        // Kembalikan status menjadi pending agar masuk ke antrean verifikasi staff
+        $warga->status_akun       = 'pending';
+        $warga->catatan_penolakan = null;
+        $warga->save();
+
+        return redirect()->route('register.pending')
+                         ->with('nama', $warga->nama)
+                         ->with('success', 'Data pendaftaran dan email Anda berhasil diperbarui. Pengajuan Anda telah dikirim ulang ke Staff Desa untuk diverifikasi.');
+    }
     }
 
     public function logout(Request $request)

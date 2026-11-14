@@ -95,7 +95,7 @@
                 </div>
             </div>
 
-            <!-- Form Eksekusi -->
+            <!-- Form Simpan Verifikasi -->
             @if($permohonan->status == 'menunggu_verifikasi' || $permohonan->status == 'revisi')
             <div class="bg-white shadow rounded-lg p-6 border border-green-200">
                 <h3 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2">Form Keputusan Verifikasi</h3>

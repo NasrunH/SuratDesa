@@ -97,7 +97,7 @@
             </div>
         </div>
 
-        <!-- Form Eksekusi -->
+        <!-- Form Simpan Persetujuan -->
         <div class="col-span-1">
             <div class="bg-white shadow rounded-lg p-6 border border-blue-200">
                 <h3 class="text-lg font-medium text-gray-900 mb-4 border-b pb-2 flex items-center">
@@ -140,7 +140,7 @@
 
                     <div class="flex justify-end pt-4 border-t border-gray-200">
                         <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded shadow-md transition transform hover:-translate-y-0.5 text-lg">
-                            Eksekusi
+                            Simpan
                         </button>
                     </div>
                 </form>
