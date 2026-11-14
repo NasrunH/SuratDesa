@@ -41,10 +41,10 @@
 
                         @if(Auth::user()->role === 'kades')
                         <div class="hidden md:flex items-center gap-1.5 ml-4 lg:ml-6 pl-4 lg:pl-6 border-l border-green-200">
-                            <a href="{{ route('dashboard') }}" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50' }}">
+                            <a href="{{ route('dashboard') }}" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('dashboard') ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:text-emerald-700 hover:bg-emerald-50' }}">
                                 Dashboard
                             </a>
-                            <a href="{{ route('kades.permohonan.index') }}" class="relative px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('kades.permohonan.*') ? 'bg-blue-600 text-white shadow-xs' : 'text-gray-600 hover:text-blue-700 hover:bg-blue-50' }}">
+                            <a href="{{ route('kades.permohonan.index') }}" class="relative px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition {{ request()->routeIs('kades.permohonan.*') ? 'bg-emerald-600 text-white shadow-xs' : 'text-gray-600 hover:text-emerald-700 hover:bg-emerald-50' }}">
                                 Permohonan TTE
                                 @php $kadesPending = \App\Models\PermohonanSurat::where('status', 'menunggu_persetujuan')->count(); @endphp
                                 @if($kadesPending > 0)
@@ -106,8 +106,8 @@
                                 </a>
 
                                 @if(Auth::user()->role === 'kades')
-                                <a href="{{ route('kades.permohonan.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs sm:text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition font-medium group">
-                                    <div class="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-blue-100 text-gray-500 group-hover:text-blue-700 flex items-center justify-center transition shrink-0">
+                                <a href="{{ route('kades.permohonan.index') }}" class="flex items-center gap-3 px-4 py-2.5 text-xs sm:text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition font-medium group">
+                                    <div class="w-8 h-8 rounded-xl bg-gray-100 group-hover:bg-emerald-100 text-gray-500 group-hover:text-emerald-700 flex items-center justify-center transition shrink-0">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                     </div>
                                     <div>

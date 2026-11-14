@@ -7,13 +7,13 @@
 
     <!-- Header Hero Banner -->
     <div class="glass rounded-3xl p-6 sm:p-8 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div class="absolute top-0 right-0 -mt-6 -mr-6 w-48 h-48 bg-gradient-to-br from-blue-400/20 to-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-0 right-0 -mt-6 -mr-6 w-48 h-48 bg-gradient-to-br from-emerald-400/20 to-teal-500/20 rounded-full blur-3xl pointer-events-none"></div>
         <div class="relative z-10 max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-bold mb-3">
-                <span class="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold mb-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
                 Panel Eksekutif Kepala Desa
             </div>
-            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-indigo-800 to-blue-600 tracking-tight">
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-emerald-950 via-teal-800 to-emerald-700 tracking-tight">
                 Selamat Datang, {{ Auth::user()->nama }}
             </h1>
             <p class="mt-2 text-gray-600 text-sm sm:text-base leading-relaxed">
@@ -21,7 +21,7 @@
             </p>
         </div>
         <div class="flex flex-wrap items-center gap-3 relative z-10">
-            <a href="{{ route('kades.permohonan.index') }}" class="relative inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-2.5 px-5 rounded-2xl shadow-md shadow-blue-200 hover:-translate-y-0.5 transition-all text-sm">
+            <a href="{{ route('kades.permohonan.index') }}" class="relative inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold py-2.5 px-5 rounded-2xl shadow-md shadow-emerald-200 hover:-translate-y-0.5 transition-all text-sm">
                 <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 <span>Daftar Permohonan TTE</span>
                 @if(($stats['menunggu'] ?? 0) > 0)
@@ -75,15 +75,15 @@
         </div>
 
         <!-- Total Surat Terbit -->
-        <a href="{{ route('kades.permohonan.index', ['tab' => 'selesai']) }}" class="glass rounded-2xl p-5 border border-blue-200/80 shadow-sm hover:shadow-md hover:border-blue-400 transition-all group flex flex-col justify-between">
+        <a href="{{ route('kades.permohonan.index', ['tab' => 'selesai']) }}" class="glass rounded-2xl p-5 border border-teal-200/80 shadow-sm hover:shadow-md hover:border-teal-400 transition-all group flex flex-col justify-between">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-bold text-blue-700 uppercase tracking-wider">Total Disetujui</span>
-                <div class="w-9 h-9 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+                <span class="text-xs font-bold text-teal-700 uppercase tracking-wider">Total Disetujui</span>
+                <div class="w-9 h-9 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center group-hover:scale-110 transition-transform">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
             </div>
             <div>
-                <div class="text-3xl font-extrabold text-gray-900 group-hover:text-blue-600 transition-colors">
+                <div class="text-3xl font-extrabold text-gray-900 group-hover:text-teal-600 transition-colors">
                     {{ $stats['disetujui'] ?? 0 }}
                 </div>
                 <p class="text-xs text-gray-500 mt-1">Akumulasi dokumen terbit</p>
@@ -107,10 +107,10 @@
         </a>
 
         <!-- Total Warga Aktif -->
-        <div class="glass rounded-2xl p-5 border border-indigo-200/80 shadow-sm flex flex-col justify-between col-span-2 md:col-span-1">
+        <div class="glass rounded-2xl p-5 border border-emerald-200/80 shadow-sm flex flex-col justify-between col-span-2 md:col-span-1">
             <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Warga Terdaftar</span>
-                <div class="w-9 h-9 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-wider">Warga Terdaftar</span>
+                <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                 </div>
             </div>
@@ -133,7 +133,7 @@
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
                         </div>
                         <div>
@@ -141,7 +141,7 @@
                             <p class="text-xs text-gray-500">Berkas permohonan yang telah divalidasi oleh Staff Desa</p>
                         </div>
                     </div>
-                    <a href="{{ route('kades.permohonan.index') }}" class="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1 group">
+                    <a href="{{ route('kades.permohonan.index') }}" class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 group">
                         Lihat Semua
                         <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
@@ -161,7 +161,7 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100 text-sm">
                                 @forelse($permohonan as $item)
-                                <tr class="hover:bg-blue-50/40 transition-colors group">
+                                <tr class="hover:bg-emerald-50/40 transition-colors group">
                                     <td class="px-5 py-4 text-xs text-gray-500 whitespace-nowrap">
                                         <div class="font-semibold text-gray-700">{{ $item->created_at->translatedFormat('d M Y') }}</div>
                                         <div class="text-[11px] text-gray-400 font-mono">{{ $item->created_at->format('H:i') }} WIB</div>
@@ -179,12 +179,12 @@
                                             $staffNama = $lastVerif?->staff?->penduduk?->nama ?? 'Staff Desa';
                                         @endphp
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
-                                            <svg class="w-3.5 h-3.5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                                            <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                             <span class="truncate max-w-[120px]" title="{{ $staffNama }}">{{ $staffNama }}</span>
                                         </span>
                                     </td>
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
-                                        <a href="{{ route('kades.permohonan.show', $item->id_permohonan_surat) }}" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm shadow-blue-200 hover:-translate-y-0.5 transition-all text-xs font-semibold">
+                                        <a href="{{ route('kades.permohonan.show', $item->id_permohonan_surat) }}" class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm shadow-emerald-200 hover:-translate-y-0.5 transition-all text-xs font-semibold">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                             <span>Review & TTE</span>
                                         </a>
@@ -193,7 +193,7 @@
                                 @empty
                                 <tr>
                                     <td colspan="5" class="px-6 py-10 text-center">
-                                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-50 mb-3 border border-blue-100 text-blue-500">
+                                        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-emerald-50 mb-3 border border-emerald-100 text-emerald-500">
                                             <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/></svg>
                                         </div>
                                         <p class="text-gray-800 font-bold text-base">Tidak ada antrean persetujuan.</p>
@@ -211,7 +211,7 @@
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                        <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         </div>
                         <div>
@@ -219,7 +219,7 @@
                             <p class="text-xs text-gray-500">Dokumen yang sudah sah ber-TTE dan dapat langsung dipratinjau</p>
                         </div>
                     </div>
-                    <a href="{{ route('kades.permohonan.index', ['tab' => 'selesai']) }}" class="text-xs font-semibold text-emerald-700 hover:text-emerald-900 flex items-center gap-1 group">
+                    <a href="{{ route('kades.permohonan.index', ['tab' => 'selesai']) }}" class="text-xs font-semibold text-teal-700 hover:text-teal-900 flex items-center gap-1 group">
                         Semua Arsip
                         <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </a>
@@ -239,10 +239,10 @@
                             </thead>
                             <tbody class="divide-y divide-gray-100 text-sm">
                                 @forelse($suratTerbitTerbaru as $terbit)
-                                <tr class="hover:bg-emerald-50/30 transition-colors group">
+                                <tr class="hover:bg-teal-50/30 transition-colors group">
                                     <td class="px-5 py-4 whitespace-nowrap">
                                         <div class="font-mono text-xs font-bold text-gray-800">{{ $terbit->nomor_surat }}</div>
-                                        <div class="inline-flex items-center gap-1 text-[10px] text-emerald-700 font-semibold mt-0.5">
+                                        <div class="inline-flex items-center gap-1 text-[10px] text-teal-700 font-semibold mt-0.5">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
                                             Sah Ber-TTE
                                         </div>
@@ -260,7 +260,7 @@
                                     <td class="px-5 py-4 text-center whitespace-nowrap">
                                         <button type="button"
                                             onclick="previewDocument('{{ route('permohonan.preview', $terbit->id_permohonan_surat) }}', 'Surat {{ addslashes($terbit->jenisSurat->nama_surat) }} - {{ addslashes($terbit->penduduk->nama) }} (No: {{ addslashes($terbit->nomor_surat) }})', '{{ route('permohonan.download', $terbit->id_permohonan_surat) }}')"
-                                            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl shadow-sm shadow-emerald-200 hover:-translate-y-0.5 transition-all text-xs font-semibold cursor-pointer">
+                                            class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl shadow-sm shadow-teal-200 hover:-translate-y-0.5 transition-all text-xs font-semibold cursor-pointer">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                             <span>Pratinjau PDF</span>
                                         </button>
@@ -288,12 +288,12 @@
             <div class="glass rounded-3xl p-6 border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] space-y-4">
                 <div class="flex items-center justify-between pb-2 border-b border-gray-100">
                     <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
                         </div>
                         <h3 class="font-bold text-gray-900 text-sm">Surat Terpopuler</h3>
                     </div>
-                    <span class="text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full">Statistik</span>
+                    <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full">Statistik</span>
                 </div>
 
                 <div class="space-y-3">
@@ -304,22 +304,22 @@
                         @php
                             $pct = round(($pop->permohonan_surat_count / $maxCount) * 100);
                         @endphp
-                        <div class="p-3 rounded-2xl bg-white/70 border border-gray-100 hover:border-indigo-200 transition-all">
+                        <div class="p-3 rounded-2xl bg-white/70 border border-gray-100 hover:border-emerald-200 transition-all">
                             <div class="flex items-center justify-between gap-2 mb-1.5">
                                 <div class="flex items-center gap-2 min-w-0">
-                                    <span class="w-5 h-5 rounded-lg bg-indigo-50 text-indigo-700 text-xs font-black flex items-center justify-center shrink-0">
+                                    <span class="w-5 h-5 rounded-lg bg-emerald-50 text-emerald-700 text-xs font-black flex items-center justify-center shrink-0">
                                         #{{ $idx + 1 }}
                                     </span>
                                     <span class="text-xs font-bold text-gray-800 truncate" title="{{ $pop->nama_surat }}">
                                         {{ $pop->nama_surat }}
                                     </span>
                                 </div>
-                                <span class="text-xs font-extrabold text-indigo-800 shrink-0">
+                                <span class="text-xs font-extrabold text-emerald-800 shrink-0">
                                     {{ $pop->permohonan_surat_count }}
                                 </span>
                             </div>
                             <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
-                                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 h-1.5 rounded-full" style="width: {{ $pct }}%"></div>
+                                <div class="bg-gradient-to-r from-emerald-500 to-teal-400 h-1.5 rounded-full" style="width: {{ $pct }}%"></div>
                             </div>
                         </div>
                     @empty
@@ -329,34 +329,34 @@
             </div>
 
             <!-- Profil Pejabat & TTE Card -->
-            <div class="rounded-3xl p-6 bg-gradient-to-br from-blue-900 via-indigo-900 to-slate-900 text-white shadow-xl relative overflow-hidden">
-                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-blue-500/20 rounded-full blur-2xl"></div>
+            <div class="rounded-3xl p-6 bg-gradient-to-br from-emerald-950 via-teal-900 to-slate-900 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl"></div>
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center font-bold text-lg text-white">
+                    <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center font-bold text-lg text-emerald-200">
                         {{ substr(Auth::user()->nama, 0, 1) }}
                     </div>
                     <div>
                         <h4 class="font-bold text-white leading-tight">{{ Auth::user()->nama }}</h4>
-                        <p class="text-xs text-blue-200 mt-0.5">Kepala Desa Medini</p>
+                        <p class="text-xs text-emerald-300 mt-0.5">Kepala Desa Medini</p>
                     </div>
                 </div>
-                <div class="space-y-2 text-xs border-t border-white/10 pt-3 text-blue-100/90 font-light">
+                <div class="space-y-2 text-xs border-t border-white/10 pt-3 text-emerald-100/90 font-light">
                     <div class="flex justify-between py-1 border-b border-white/5">
-                        <span class="text-blue-300">NIP / Jabatan</span>
+                        <span class="text-emerald-300">NIP / Jabatan</span>
                         <span class="font-medium text-white">{{ Auth::user()->kepalaDesa?->nip ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between py-1 border-b border-white/5">
-                        <span class="text-blue-300">Periode Jabatan</span>
+                        <span class="text-emerald-300">Periode Jabatan</span>
                         <span class="font-medium text-white">{{ Auth::user()->kepalaDesa?->periode_jabatan ?? '-' }}</span>
                     </div>
                     <div class="flex justify-between py-1">
-                        <span class="text-blue-300">Sistem TTE</span>
+                        <span class="text-emerald-300">Sistem TTE</span>
                         <span class="font-medium text-emerald-400 flex items-center gap-1">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Aktif & Terverifikasi
                         </span>
                     </div>
                 </div>
-                <p class="text-[11px] text-blue-200/80 mt-4 leading-relaxed italic">
+                <p class="text-[11px] text-emerald-200/80 mt-4 leading-relaxed italic">
                     Dokumen yang Anda setujui langsung dibubuhi QR Code terenkripsi untuk pembuktian keaslian surat desa secara digital.
                 </p>
             </div>
