@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Models\JenisSurat;
 use App\Models\SyaratJenisSurat;
@@ -41,6 +42,7 @@ class MasterSuratController extends Controller
         $request->validate([
             'nama_surat'         => 'required|string|max:100|unique:jenis_surat,nama_surat',
             'deskripsi'          => 'nullable|string',
+            'thumbnail'          => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
             'is_aktif'           => 'nullable|boolean',
             'syarat'             => 'nullable|array',
             'syarat.*.nama'      => 'required|string|max:100',
@@ -50,19 +52,28 @@ class MasterSuratController extends Controller
             'nama_surat.required'     => 'Nama jenis surat wajib diisi.',
             'nama_surat.max'          => 'Nama jenis surat maksimal 100 karakter.',
             'nama_surat.unique'       => 'Nama jenis surat ini sudah terdaftar di sistem.',
+            'thumbnail.image'         => 'Berkas thumbnail harus berupa gambar.',
+            'thumbnail.mimes'         => 'Format gambar thumbnail harus berupa jpeg, png, jpg, webp, atau svg.',
+            'thumbnail.max'           => 'Ukuran gambar thumbnail maksimal 2MB.',
             'syarat.*.nama.required'  => 'Nama kolom persyaratan wajib diisi.',
             'syarat.*.nama.max'       => 'Nama persyaratan maksimal 100 karakter.',
             'syarat.*.tipe.required'  => 'Tipe input syarat wajib dipilih.',
             'syarat.*.tipe.in'        => 'Tipe input syarat tidak valid.',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $thumbnailPath = $request->file('thumbnail')->store('jenis_surat_thumbnails', 'public');
+        }
+
+        DB::transaction(function () use ($request, $thumbnailPath) {
             $id = Str::uuid();
 
             JenisSurat::create([
                 'id_jenis_surat'  => $id,
                 'nama_surat'      => $request->nama_surat,
                 'deskripsi'       => $request->deskripsi,
+                'thumbnail'       => $thumbnailPath,
                 'template_path'   => 'templates/default.blade.php',
                 'template_konten' => $request->template_konten,
                 'is_aktif'        => $request->boolean('is_aktif', true),
@@ -104,6 +115,8 @@ class MasterSuratController extends Controller
         $request->validate([
             'nama_surat'         => "required|string|max:100|unique:jenis_surat,nama_surat,{$jenisSurat->id_jenis_surat},id_jenis_surat",
             'deskripsi'          => 'nullable|string',
+            'thumbnail'          => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'hapus_thumbnail'    => 'nullable|boolean',
             'is_aktif'           => 'nullable|boolean',
             'syarat'             => 'nullable|array',
             'syarat.*.nama'      => 'required|string|max:100',
@@ -113,16 +126,38 @@ class MasterSuratController extends Controller
             'nama_surat.required'     => 'Nama jenis surat wajib diisi.',
             'nama_surat.max'          => 'Nama jenis surat maksimal 100 karakter.',
             'nama_surat.unique'       => 'Nama jenis surat ini sudah digunakan oleh surat lain.',
+            'thumbnail.image'         => 'Berkas thumbnail harus berupa gambar.',
+            'thumbnail.mimes'         => 'Format gambar thumbnail harus berupa jpeg, png, jpg, webp, atau svg.',
+            'thumbnail.max'           => 'Ukuran gambar thumbnail tidak boleh melebihi 2MB.',
             'syarat.*.nama.required'  => 'Nama kolom persyaratan wajib diisi.',
             'syarat.*.nama.max'       => 'Nama persyaratan maksimal 100 karakter.',
             'syarat.*.tipe.required'  => 'Tipe input syarat wajib dipilih.',
             'syarat.*.tipe.in'        => 'Tipe input syarat tidak valid.',
         ]);
 
-        DB::transaction(function () use ($request, $jenisSurat) {
+        $thumbnailPath = $jenisSurat->thumbnail;
+
+        // Opsi menghapus thumbnail kustom dan kembali ke default
+        if ($request->boolean('hapus_thumbnail')) {
+            if ($jenisSurat->thumbnail && Storage::disk('public')->exists($jenisSurat->thumbnail)) {
+                Storage::disk('public')->delete($jenisSurat->thumbnail);
+            }
+            $thumbnailPath = null;
+        }
+
+        // Unggah thumbnail baru jika ada
+        if ($request->hasFile('thumbnail')) {
+            if ($jenisSurat->thumbnail && Storage::disk('public')->exists($jenisSurat->thumbnail)) {
+                Storage::disk('public')->delete($jenisSurat->thumbnail);
+            }
+            $thumbnailPath = $request->file('thumbnail')->store('jenis_surat_thumbnails', 'public');
+        }
+
+        DB::transaction(function () use ($request, $jenisSurat, $thumbnailPath) {
             $jenisSurat->update([
                 'nama_surat'      => $request->nama_surat,
                 'deskripsi'       => $request->deskripsi,
+                'thumbnail'       => $thumbnailPath,
                 'template_konten' => $request->template_konten,
                 'is_aktif'        => $request->boolean('is_aktif', true),
             ]);

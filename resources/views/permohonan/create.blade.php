@@ -32,8 +32,8 @@
                class="glass rounded-2xl p-6 border border-white/50 shadow-sm hover:shadow-lg hover:border-green-200 hover:-translate-y-1 transition-all duration-300 group cursor-pointer block relative overflow-hidden">
                 <div class="absolute top-0 right-0 w-24 h-24 bg-green-100 rounded-bl-full opacity-0 group-hover:opacity-60 transition-opacity"></div>
                 <div class="flex items-start gap-4 relative z-10">
-                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-100 to-emerald-100 border border-green-200 flex items-center justify-center text-green-700 shrink-0 group-hover:from-green-200 group-hover:to-emerald-200 transition-colors">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <div class="w-16 h-16 rounded-2xl overflow-hidden bg-slate-100 border border-green-200 shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+                        <img src="{{ $js->thumbnail_url }}" alt="{{ $js->nama_surat }}" class="w-full h-full object-cover">
                     </div>
                     <div class="flex-1 min-w-0">
                         <h3 class="font-bold text-gray-900 group-hover:text-green-700 transition-colors leading-tight">{{ $js->nama_surat }}</h3>

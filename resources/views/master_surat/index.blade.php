@@ -34,8 +34,27 @@
                     @forelse($jenisSurat as $js)
                     <tr class="hover:bg-slate-50/50 transition-colors group">
                         <td class="px-5 py-4">
-                            <div class="font-bold text-gray-900 group-hover:text-teal-700 transition-colors">{{ $js->nama_surat }}</div>
-                            <div class="text-xs text-gray-400 mt-0.5 line-clamp-1">{{ $js->deskripsi ?? '-' }}</div>
+                            <div class="flex items-center gap-3.5">
+                                <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 shrink-0 cursor-pointer group/thumb relative shadow-2xs"
+                                     onclick="previewDocument('{{ $js->thumbnail_url }}', 'Thumbnail - {{ addslashes($js->nama_surat) }}')"
+                                     title="Klik untuk pratinjau">
+                                    <img src="{{ $js->thumbnail_url }}" alt="{{ $js->nama_surat }}" class="w-full h-full object-cover group-hover/thumb:scale-110 transition duration-300">
+                                    <div class="absolute inset-0 bg-black/30 opacity-0 group-hover/thumb:opacity-100 flex items-center justify-center transition text-white">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="font-bold text-gray-900 group-hover:text-teal-700 transition-colors flex items-center gap-1.5">
+                                        <span>{{ $js->nama_surat }}</span>
+                                        @if($js->thumbnail)
+                                            <span class="inline-flex items-center px-1.5 py-0.2 bg-teal-50 text-teal-700 border border-teal-200 rounded text-[10px] font-semibold">Kustom</span>
+                                        @else
+                                            <span class="inline-flex items-center px-1.5 py-0.2 bg-slate-100 text-slate-500 rounded text-[10px] font-medium">Default</span>
+                                        @endif
+                                    </div>
+                                    <div class="text-xs text-gray-400 mt-0.5 line-clamp-1">{{ $js->deskripsi ?? '-' }}</div>
+                                </div>
+                            </div>
                         </td>
                         <td class="px-5 py-4 text-center">
                             <span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200">{{ $js->syarat->count() }}</span>

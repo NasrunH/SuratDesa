@@ -14,7 +14,7 @@
             Kembali ke Daftar
         </a>
 
-        <form id="mainForm" action="{{ route('staff.jenis_surat.store') }}" method="POST" class="space-y-6">
+        <form id="mainForm" action="{{ route('staff.jenis_surat.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
             @csrf
 
             {{-- Info Dasar --}}
@@ -32,6 +32,32 @@
                               class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-teal-500 transition text-sm"
                               placeholder="Jelaskan kegunaan surat ini untuk warga...">{{ old('deskripsi') }}</textarea>
                 </div>
+
+                {{-- Thumbnail Gambar Surat --}}
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">
+                        Thumbnail / Gambar Layanan
+                        <span class="text-xs font-normal text-gray-400 ml-1">(Opsional)</span>
+                    </label>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-xl border border-dashed border-slate-300 bg-slate-50/50">
+                        <div class="w-20 h-20 rounded-xl overflow-hidden bg-slate-200 border border-slate-300 shrink-0 flex items-center justify-center relative group shadow-xs">
+                            <img id="thumbnail-preview" src="{{ asset('images/default_surat.png') }}" alt="Preview Thumbnail" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[10px] font-bold transition">
+                                Pratinjau
+                            </div>
+                        </div>
+                        <div class="flex-1 space-y-1.5">
+                            <input type="file" name="thumbnail" id="thumbnail-input" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg+xml"
+                                   onchange="previewThumbnailImage(event)"
+                                   class="block w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 transition cursor-pointer">
+                            <p class="text-[11px] text-gray-500 leading-relaxed">
+                                Format: JPG, PNG, WEBP, atau SVG (Maks. 2MB).<br>
+                                <span class="text-teal-700 font-medium">Bila dikosongkan, sistem otomatis menggunakan gambar default layanan desa.</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex items-center gap-3">
                     <input type="checkbox" id="is_aktif" name="is_aktif" value="1" checked class="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500">
                     <label for="is_aktif" class="text-sm font-medium text-gray-700">Aktifkan layanan ini segera</label>
@@ -344,6 +370,18 @@ window.previewTemplatePdf = function() {
     document.body.appendChild(form);
     form.submit();
     document.body.removeChild(form);
+};
+
+window.previewThumbnailImage = function(event) {
+    const input = event.target;
+    const preview = document.getElementById('thumbnail-preview');
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.src = e.target.result;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 };
 </script>
 @endpush

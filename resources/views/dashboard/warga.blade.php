@@ -138,14 +138,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             @forelse($jenisSuratList as $layanan)
-                @php
-                    $isSKU = Str::contains(Str::lower($layanan->nama_surat), 'usaha') || Str::contains(Str::lower($layanan->nama_surat), 'sku');
-                    $imagePath = $isSKU ? 'images/business_service.png' : 'images/social_service.png';
-                @endphp
                 <div class="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-gray-150 shadow-sm hover:shadow-xl hover:border-green-300 transition-all duration-300 flex flex-col sm:flex-row">
                     <!-- Image Banner -->
                     <div class="sm:w-44 h-36 sm:h-auto overflow-hidden shrink-0 relative bg-gray-100">
-                        <img src="{{ asset($imagePath) }}" alt="{{ $layanan->nama_surat }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <img src="{{ $layanan->thumbnail_url }}" alt="{{ $layanan->nama_surat }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-black/40 sm:from-transparent to-transparent"></div>
                         <div class="absolute bottom-2 left-3 sm:hidden text-white font-bold text-sm drop-shadow line-clamp-1">
                             {{ $layanan->nama_surat }}
