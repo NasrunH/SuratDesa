@@ -14,7 +14,12 @@ use App\Http\Controllers\ProfileController;
 // PUBLIC ROUTES (No Auth)
 // =============================================
 Route::get('/', function () {
-    return view('welcome');
+    $jenisSurat = \App\Models\JenisSurat::where('is_aktif', true)
+        ->withCount('syarat')
+        ->orderBy('created_at', 'asc')
+        ->get();
+
+    return view('welcome', compact('jenisSurat'));
 });
 Route::get('/surat/verify/{qr_code}', [SuratPublicController::class, 'verify'])->name('surat.verify');
 

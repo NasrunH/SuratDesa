@@ -23,6 +23,18 @@
         
         <form class="mt-8 space-y-6" action="{{ route('login') }}" method="POST">
             @csrf
+
+            @if (session()->has('url.intended') && str_contains(session('url.intended'), 'permohonan/form'))
+                <div class="bg-teal-50 border border-teal-200 rounded-2xl p-4 mb-4 text-sm text-teal-900 flex items-start gap-3 shadow-sm">
+                    <div class="w-8 h-8 rounded-xl bg-teal-100 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <span class="font-bold text-teal-950 block">Masuk untuk Mengajukan Surat</span>
+                        <span class="text-xs text-teal-700 mt-0.5 block leading-relaxed">Silakan masukkan NIK dan Kata Sandi Anda. Anda akan otomatis diarahkan ke formulir pengajuan surat setelah berhasil masuk.</span>
+                    </div>
+                </div>
+            @endif
             
             @if (session('warning'))
                 <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-4 text-sm text-amber-800 flex items-start gap-3">

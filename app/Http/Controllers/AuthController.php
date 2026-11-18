@@ -139,12 +139,12 @@ class AuthController extends Controller
 
             $user = Auth::user();
             if ($user->role === 'kades') {
-                return redirect()->intended('dashboard')->with('success', 'Selamat datang, Kepala Desa ' . $user->nama . '!');
+                return redirect()->route('dashboard')->with('success', 'Selamat datang, Kepala Desa ' . $user->nama . '!');
             } elseif ($user->role === 'staff') {
-                return redirect()->intended('dashboard')->with('success', 'Selamat datang, ' . $user->nama . '!');
+                return redirect()->route('dashboard')->with('success', 'Selamat datang, ' . $user->nama . '!');
             }
 
-            return redirect()->intended('dashboard')->with('success', 'Selamat datang kembali, ' . $user->nama . '!');
+            return redirect()->intended(route('dashboard'))->with('success', 'Selamat datang kembali, ' . $user->nama . '!');
         }
 
         return back()->withErrors([
